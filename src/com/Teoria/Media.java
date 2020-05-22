@@ -14,7 +14,7 @@ public class Media{
     public float get_Media(){
         return med;
     }
-    public void Calcular_Media(int b){
+    public void Calcular_Media(long b){
         this.suma = this.suma + b;
         this.muestras++;
         this.med = (float) suma / muestras;
