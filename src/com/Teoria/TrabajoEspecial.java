@@ -1,14 +1,13 @@
 package com.Teoria;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Vector;
-import java.awt.Color;
 
 
 
@@ -219,12 +218,24 @@ public class TrabajoEspecial{
         this.dist_o = p_original;
         this.dist_pol = p_ej2;
 
-        Histograma prueba = new Histograma(exitos_original,"original");
+        Histograma prueba = new Histograma(p_original,"original");
         prueba.Ver_Histograma();
 
-        System.out.println("ORIGINAL - Media: "+media_o.get_Media()+"  Desvio Estandar: "+imgoriginal_de.get_Desvio_Estandar()+" ");
-        System.out.println("IMG1 - Media : "+media_ej1.get_Media()+"  Desvio Estandar: "+img_ej1_de.get_Desvio_Estandar()+" ");
-        System.out.println("EJ2 - Media: "+media_ej2.get_Media()+"  Desvio Estandar: "+img_ej2_de.get_Desvio_Estandar()+" ");
+
+        try {
+            File outFile = new File(System.getProperty("user.dir") + "/" + "Desvios y Medias Ejercicio 2" + ".txt");
+            if (outFile.exists()) {
+                outFile.delete();
+                outFile.createNewFile();
+            }
+            FileWriter writer = new FileWriter(outFile);
+            writer.write( "ORIGINAL - Media: "+media_o.get_Media()+"  Desvio Estandar: "+imgoriginal_de.get_Desvio_Estandar()+ "\n");
+            writer.write( "IMG1 - Media : "+media_ej1.get_Media()+"  Desvio Estandar: "+img_ej1_de.get_Desvio_Estandar()+ "\n");
+            writer.write( "EJ2 - Media: "+media_ej2.get_Media()+"  Desvio Estandar: "+img_ej2_de.get_Desvio_Estandar()+ "\n");
+            writer.close();
+
+        } catch (Exception e) {
+        }
 
     }
 

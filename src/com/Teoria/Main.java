@@ -8,6 +8,7 @@ public class Main {
 
 
         TrabajoEspecial tp = new TrabajoEspecial();
+        Vector<Tupla> r = tp.Calcular_CoefCorrelacion();
         tp.ej2();
     /*
         Vector<Tupla> r = tp.Calcular_CoefCorrelacion();

@@ -4,11 +4,13 @@ package com.Teoria;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.renderer.category.BarRenderer;
-import org.jfree.data.category.DefaultCategoryDataset;
-import org.jfree.util.PublicCloneable;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.StandardXYBarPainter;
+import org.jfree.chart.renderer.xy.XYBarRenderer;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -18,11 +20,11 @@ import java.io.File;
 
 class Histograma {
 
-    private int[] vectorhistograma;
+    private float[] vectorhistograma;
     private String titulo;
 
 
-    public Histograma(int[] vector, String titulo) {
+    public Histograma(float[] vector, String titulo) {
         this.vectorhistograma = vector;
         this.titulo = titulo;
     }
@@ -33,21 +35,22 @@ class Histograma {
 
     private void Crear_Histograma() {
 
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-        String numpix = "#Pixeles";
+        XYSeries set = new XYSeries("#Pixeles");
 
         for (int i = 0; i < this.vectorhistograma.length; i++) {
-            if (vectorhistograma[i] != 0) {
-                dataset.addValue(this.vectorhistograma[i], numpix, "" + i);
-            }
-
+                set.add(i,this.vectorhistograma[i]);
         }
+        final XYSeriesCollection dataset = new XYSeriesCollection(set);
 
-        JFreeChart chart = ChartFactory.createBarChart("Histograma: " + this.titulo, null, null, dataset, PlotOrientation.VERTICAL, true, true, false);
+        JFreeChart chart = ChartFactory.createXYBarChart("Histograma: " + this.titulo, "Escala de grises",false, "Probabilidad", dataset, PlotOrientation.VERTICAL, true, true, false);
 
-        CategoryPlot plot = (CategoryPlot) chart.getPlot();
-        BarRenderer renderer = (BarRenderer) plot.getRenderer();
-        renderer.setSeriesPaint(0, Color.black);
+
+        XYPlot plot = (XYPlot) chart.getPlot();
+        ValueAxis axis = plot.getDomainAxis();
+        axis.setLowerBound(0);
+        XYBarRenderer r = (XYBarRenderer) plot.getRenderer();
+        r.setBarPainter(new StandardXYBarPainter());
+        r.setSeriesPaint(0, Color.black);
         chart.setAntiAlias(true);
         chart.setBackgroundPaint(new Color(144, 144, 144));
 
@@ -63,7 +66,7 @@ class Histograma {
 
         panel.removeAll();
         panel.repaint();
-        panel.setLayout(new java.awt.BorderLayout());
+        panel.setLayout(new BorderLayout());
         panel.add(new ChartPanel(chart));
         panel.validate();
         panel.setVisible(true);
