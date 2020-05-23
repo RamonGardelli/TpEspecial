@@ -123,6 +123,10 @@ public class TrabajoEspecial{
 
 
 
+
+
+
+
         try {
             File outFile = new File(System.getProperty("user.dir") + "/" + "Factores Ejercicio 1" + ".txt");
             if (outFile.exists()) {
