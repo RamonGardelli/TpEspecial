@@ -20,11 +20,11 @@ import java.io.File;
 
 class Histograma {
 
-    private float[] vectorhistograma;
+    private int[] vectorhistograma;
     private String titulo;
 
 
-    public Histograma(float[] vector, String titulo) {
+    public Histograma(int[] vector, String titulo) {
         this.vectorhistograma = vector;
         this.titulo = titulo;
     }

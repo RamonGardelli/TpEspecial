@@ -10,6 +10,15 @@ public class Main {
         TrabajoEspecial tp = new TrabajoEspecial();
         Vector<Tupla> r = tp.Calcular_CoefCorrelacion();
         tp.ej2();
+
+        tp.ej3();
+
+        /*
+        Vector<Tupla> r = tp.Calcular_CoefCorrelacion();
+        tp.ej2();
+        */
+
+
     /*
         Vector<Tupla> r = tp.Calcular_CoefCorrelacion();
         System.out.println("r["+ r.elementAt(0).getNombre() +"]: " + r.elementAt(0).getFactor() + "");

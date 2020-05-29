@@ -19,10 +19,9 @@ public class TrabajoEspecial{
     private BufferedImage img_4;
     private BufferedImage img_5;
     private BufferedImage img_ej2;
-    private float[] dist_o;
-    private float[] dist_pol;
     private BufferedImage puntej1;
-
+    private float[] puntej2_orig;
+    private float[] puntej2_pol;
 
     public TrabajoEspecial(){
         //CARGAR IMAGEN
@@ -219,10 +218,10 @@ public class TrabajoEspecial{
 
         }
         //distribucion de las imagenes
-        this.dist_o = p_original;
-        this.dist_pol = p_ej2;
+        this.puntej2_orig = p_original;
+        this.puntej2_pol = p_ej2;
 
-        Histograma prueba = new Histograma(p_original,"original");
+        Histograma prueba = new Histograma(exitos_original,"img original");
         prueba.Ver_Histograma();
 
 
@@ -240,6 +239,58 @@ public class TrabajoEspecial{
 
         } catch (Exception e) {
         }
+
+    }
+
+    public int[] arrayHelperPos(){
+
+        Vector<Integer> helper = new Vector<>();
+
+
+        for (int i=0; i<this.puntej2_orig.length;i++){
+            if(this.puntej2_orig[i] != 0){
+                helper.add(i);
+            }
+        }
+        int[] ret = new int[helper.size()];
+
+        for(int j=0;j<helper.size();j++){
+            ret[j] = helper.elementAt(j);
+        }
+        return ret;
+    }
+    public float[] arrayHelperProb(){
+
+        Vector<Float> helper = new Vector<>();
+
+
+        for (int i=0; i<this.puntej2_orig.length;i++){
+            if(this.puntej2_orig[i] != 0){
+                helper.add(puntej2_orig[i]);
+            }
+        }
+
+        float[] ret2 = new float[helper.size()];
+        for(int j=0;j<helper.size();j++) {
+            ret2[j] = helper.elementAt(j);
+        }
+
+        return ret2;
+    }
+
+
+    public void ej3(){
+
+        Huffman ej3 = new Huffman();
+
+        int[] pos = arrayHelperPos();
+        float[] prob = arrayHelperProb();
+
+        String[] code = ej3.do_Huffman(prob);
+
+        for (int i = 0; i < code.length; i++)
+            System.out.println(" S "+pos[i]+" = "+code[i]+"");
+
 
     }
 
