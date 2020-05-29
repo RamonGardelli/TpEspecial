@@ -11,7 +11,11 @@ public class Main {
         Vector<Tupla> r = tp.Calcular_CoefCorrelacion();
         tp.ej2();
 
-        tp.ej3();
+        byte[] compress = tp.ej3();
+        /*
+        for(int i =0;i< compress.length;i++){
+            System.out.println(compress[i]);
+        }*/
 
         /*
         Vector<Tupla> r = tp.Calcular_CoefCorrelacion();

@@ -105,14 +105,14 @@ public class Huffman {
             orden_Huff[ult_pos] = nh3; // mi última pos válida, ahora apunta al último nodo calculado
             Arrays.sort(orden_Huff, 0, ult_pos + 1); // ordeno de forma ascendente. // ult_pos+1, "+1" -> es un parche.
             ////// ojo con los pasajes de ult_pos, compilador pospone asignación? //////
-			
+			/*
 			for (int i = 0; i < orden_Huff.length; i++)
 				if (orden_Huff[i] != null)
 					System.out.print(" p["+i+"] = "+orden_Huff[i].get_Probabilidad()+" ");
 				else
 					System.out.print(" p["+i+"] = null ");
 			System.out.print("   "+"ult_pos = "+ult_pos);
-			System.out.println(" ");
+			System.out.println(" ");*/
         }
         String[] codigo_Huffman = new String[dist.length];
         arbol_Huffman(codigo_Huffman, "", orden_Huff[0]); // va creando Strings que se desechan, a costa de simplicidad. Messi.

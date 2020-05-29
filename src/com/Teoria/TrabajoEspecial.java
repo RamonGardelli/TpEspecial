@@ -1,11 +1,17 @@
 package com.Teoria;
 
+
+import sun.misc.IOUtils;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Vector;
 
@@ -221,7 +227,7 @@ public class TrabajoEspecial{
         this.puntej2_orig = p_original;
         this.puntej2_pol = p_ej2;
 
-        Histograma prueba = new Histograma(exitos_original,"img original");
+        Histograma prueba = new Histograma(exitos_original,"original");
         prueba.Ver_Histograma();
 
 
@@ -279,20 +285,69 @@ public class TrabajoEspecial{
     }
 
 
-    public void ej3(){
+    private int get_posicion(int[] pos, int rgb){
+        for (int i = 0; i < pos.length; i++)
+            if (pos[i] == rgb)
+                return i;
+        return -1;
+    }
+
+    public byte[] ej3(){
 
         Huffman ej3 = new Huffman();
-
         int[] pos = arrayHelperPos();
         float[] prob = arrayHelperProb();
-
         String[] code = ej3.do_Huffman(prob);
+        //for (int i = 0; i < code.length; i++)
+        //System.out.println(" S "+pos[i]+" = "+code[i]+"");
 
-        for (int i = 0; i < code.length; i++)
-            System.out.println(" S "+pos[i]+" = "+code[i]+"");
+        Vector<Byte> mensaje = new Vector<>();
+        int pos_buffer = 0;
+        byte to_add = 0;
+        for (int x = 0; x < imgoriginal.getWidth(); x++) {
+            for (int y = 0; y < imgoriginal.getHeight(); y++) {
+                int rgb = imgoriginal.getRGB(x, y);
+                Color color = new Color(rgb, true);
+                rgb = color.getRed();
+                String b = code[this.get_posicion(pos, rgb)];
+                for (int i=0;i<b.length();i++){
+                    to_add = (byte) (to_add << 1);
+                    pos_buffer++;
+                    if (b.charAt(i) == '1')
+
+                        to_add = (byte) (to_add | 00000001);
+
+                    if (pos_buffer == 8){
+                        pos_buffer = 0;
+                        mensaje.add(to_add);
+                        to_add = 0;
+                    }
+                }
+            }
+        }
+        byte[] byte_mensaje = new byte[mensaje.size()];
+        for (int i = 0; i < byte_mensaje.length; i++)
+            byte_mensaje[i] = mensaje.get(i);
 
 
+
+
+        try {
+            File outFile = new File(System.getProperty("user.dir") + "/" + "Compress" + ".bin");
+            if (outFile.exists()) {
+                outFile.delete();
+                outFile.createNewFile();
+            }
+            FileOutputStream asd = new FileOutputStream(outFile);
+            asd.write(byte_mensaje);
+            asd.close();
+
+        } catch (Exception e) {
+        }
+
+        return byte_mensaje;
     }
+
 
 
 }
