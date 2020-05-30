@@ -28,6 +28,7 @@ public class TrabajoEspecial{
     private BufferedImage puntej1;
     private float[] puntej2_orig;
     private float[] puntej2_pol;
+    private int[] exitosorigej2;
 
     public TrabajoEspecial(){
         //CARGAR IMAGEN
@@ -227,6 +228,8 @@ public class TrabajoEspecial{
         this.puntej2_orig = p_original;
         this.puntej2_pol = p_ej2;
 
+        this.exitosorigej2 = exitos_original;
+
         Histograma prueba = new Histograma(exitos_original,"original");
         prueba.Ver_Histograma();
 
@@ -285,6 +288,87 @@ public class TrabajoEspecial{
     }
 
 
+    /*
+    public char[] obtenerEncabezado(){
+        char [] encabezado = new char[54];
+
+        // Tipo de fichero BitMap
+        encabezado[0] = 'B';
+        encabezado[1] = 'M';
+
+        // Tamaño de archivo
+        encabezado[2] = 0x78;
+        encabezado[3] = 0x80;
+        encabezado[4] = 0x22;
+        encabezado[5] = 0x02;
+
+        // Reservado
+
+        for (int i = 6; i < 10; i++)
+            encabezado[i] = 0;
+
+        // Inicio de los datos de la imagen
+        encabezado[10] = 0x36;
+        encabezado[11] = 0;
+        encabezado[12] = 0;
+        encabezado[13] = 0;
+
+        // Tamaño del header
+        encabezado[14] = 40;
+        for (int i = 15; i < 18; i++)
+            encabezado[i] = 0;
+
+        // Ancho de la imagen
+        encabezado[18] = 1310;
+        for (int i = 19; i < 22; i++)
+            encabezado[i] = 0;
+
+        // Alto de la imagen
+        encabezado[22] = 1700;
+        for (int i = 23; i < 26; i++)
+            encabezado[i] = 0;
+
+        // Numero de planos, tiene que ser 1
+        encabezado[26] = 1;
+        encabezado[27] = 0;
+
+        // Numero de bits por pixel
+        encabezado[28] = 8; // 1 byte
+        encabezado[29] = 0;
+
+        // Compresion (0 = no tiene compresion)
+        for (int i = 30; i < 34; i++)
+            encabezado[i] = 0;
+
+        // Tamaño de la imagen (alto x ancho x profundidad)
+        encabezado[34] = 0xE0;
+        encabezado[35] = 0xEC;
+        encabezado[36] = 0x87;
+        encabezado[37] = 0;
+
+        // Resolución horizontal de la imagen
+        for (int i = 38; i < 42; i++)
+            encabezado[i] = 0;
+
+        // Resolución vertical de la imagen
+        for (int i = 42; i < 46; i++)
+            encabezado[i] = 0;
+
+        // Tamaño de la tabla de color
+        encabezado[46] = 0;
+        encabezado[47] = 1;
+        encabezado[48] = 0;
+        encabezado[49] = 0;
+
+        // Numero de colores importantes (si es 0 todos son importantes)
+        for (int i = 50; i < 54; i++)
+            encabezado[i] = 0;
+
+        return encabezado;
+    }*/
+
+
+
     private int get_posicion(int[] pos, int rgb){
         for (int i = 0; i < pos.length; i++)
             if (pos[i] == rgb)
@@ -292,7 +376,7 @@ public class TrabajoEspecial{
         return -1;
     }
 
-    public byte[] ej3(){
+    public byte[] compresor(){
 
         Huffman ej3 = new Huffman();
         int[] pos = arrayHelperPos();
@@ -315,7 +399,7 @@ public class TrabajoEspecial{
                     pos_buffer++;
                     if (b.charAt(i) == '1')
 
-                        to_add = (byte) (to_add | 00000001);
+                        to_add = (byte) (to_add | 1);
 
                     if (pos_buffer == 8){
                         pos_buffer = 0;
@@ -338,14 +422,30 @@ public class TrabajoEspecial{
                 outFile.delete();
                 outFile.createNewFile();
             }
-            FileOutputStream asd = new FileOutputStream(outFile);
-            asd.write(byte_mensaje);
-            asd.close();
+            FileOutputStream writer = new FileOutputStream(outFile);
+            writer.write(imgoriginal.getWidth());
+            writer.write(imgoriginal.getHeight());
+            writer.write(pos.length);
+            for(int i=0;i<pos.length;i++){
+                writer.write(pos[i]);
+                writer.write(this.exitosorigej2[i]);
+            }
+            writer.write(byte_mensaje);
+            writer.close();
 
         } catch (Exception e) {
         }
 
         return byte_mensaje;
+    }
+
+    public byte[] descompresor(){
+
+
+
+
+
+
     }
 
 
