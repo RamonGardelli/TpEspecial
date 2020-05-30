@@ -5,7 +5,7 @@ import java.util.Vector;
 
 public class Huffman {
 
-    //private Nodo_Huff raiz_Huffman; // RAÍZ
+    private Nodo_Huff punt_Huffman;
     private Nodo_Huff[] orden_Huff; // Hojas del árbol, las cuales corresponden a cada símbolo c, y su prob. p
 
     class Nodo_Huff implements Comparable<Nodo_Huff> {
@@ -77,6 +77,33 @@ public class Huffman {
             arbol_Huffman(ch, code + "1", nh.get_der()); //
         }
     }
+    public int mover_ArbolDerecha(){
+        this.punt_Huffman = punt_Huffman.get_der();
+        if(punt_Huffman.es_Hoja()){
+            int simb = punt_Huffman.get_simbolo();
+            punt_Huffman = orden_Huff[0];
+            return simb;
+        }
+        return -1;
+    }
+    public int mover_ArbolIzquierda(){
+        this.punt_Huffman = punt_Huffman.get_izq();
+        if(punt_Huffman.es_Hoja()){
+            int simb = punt_Huffman.get_simbolo();
+            punt_Huffman = orden_Huff[0];
+            return simb;
+        }
+        return -1;
+    }
+/*
+    public int recorrer_Huffman() { // recorro la codificacion, desde raíz hasta las hojas
+        if (nh.es_Hoja())
+            return nh.get_simbolo();
+        else {
+            arbol_Huffman(, nh.get_izq()); //
+            arbol_Huffman(, nh.get_der()); //
+        }
+    }*/
 
 
     public String[] do_Huffman(float[] dist) {
@@ -115,6 +142,7 @@ public class Huffman {
 			System.out.println(" ");*/
         }
         String[] codigo_Huffman = new String[dist.length];
+        this.punt_Huffman = orden_Huff[0];
         arbol_Huffman(codigo_Huffman, "", orden_Huff[0]); // va creando Strings que se desechan, a costa de simplicidad. Messi.
         return codigo_Huffman; // retorna la codificación correspondiente a cada simbolo
     }

@@ -12,6 +12,8 @@ public class Main {
         tp.ej2();
 
         byte[] compress = tp.compresor();
+
+        tp.descompresor();
         /*
         for(int i =0;i< compress.length;i++){
             System.out.println(compress[i]);
