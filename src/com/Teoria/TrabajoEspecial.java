@@ -4,7 +4,10 @@ package com.Teoria;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.IndexColorModel;
 import java.io.*;
+import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.util.Collections;
 import java.util.Vector;
@@ -286,87 +289,6 @@ public class TrabajoEspecial {
         return ret2;
     }
 
-
-    /*
-    public char[] obtenerEncabezado(){
-        char [] encabezado = new char[54];
-
-        // Tipo de fichero BitMap
-        encabezado[0] = 'B';
-        encabezado[1] = 'M';
-
-        // Tamaño de archivo
-        encabezado[2] = 0x78;
-        encabezado[3] = 0x80;
-        encabezado[4] = 0x22;
-        encabezado[5] = 0x02;
-
-        // Reservado
-
-        for (int i = 6; i < 10; i++)
-            encabezado[i] = 0;
-
-        // Inicio de los datos de la imagen
-        encabezado[10] = 0x36;
-        encabezado[11] = 0;
-        encabezado[12] = 0;
-        encabezado[13] = 0;
-
-        // Tamaño del header
-        encabezado[14] = 40;
-        for (int i = 15; i < 18; i++)
-            encabezado[i] = 0;
-
-        // Ancho de la imagen
-        encabezado[18] = 1310;
-        for (int i = 19; i < 22; i++)
-            encabezado[i] = 0;
-
-        // Alto de la imagen
-        encabezado[22] = 1700;
-        for (int i = 23; i < 26; i++)
-            encabezado[i] = 0;
-
-        // Numero de planos, tiene que ser 1
-        encabezado[26] = 1;
-        encabezado[27] = 0;
-
-        // Numero de bits por pixel
-        encabezado[28] = 8; // 1 byte
-        encabezado[29] = 0;
-
-        // Compresion (0 = no tiene compresion)
-        for (int i = 30; i < 34; i++)
-            encabezado[i] = 0;
-
-        // Tamaño de la imagen (alto x ancho x profundidad)
-        encabezado[34] = 0xE0;
-        encabezado[35] = 0xEC;
-        encabezado[36] = 0x87;
-        encabezado[37] = 0;
-
-        // Resolución horizontal de la imagen
-        for (int i = 38; i < 42; i++)
-            encabezado[i] = 0;
-
-        // Resolución vertical de la imagen
-        for (int i = 42; i < 46; i++)
-            encabezado[i] = 0;
-
-        // Tamaño de la tabla de color
-        encabezado[46] = 0;
-        encabezado[47] = 1;
-        encabezado[48] = 0;
-        encabezado[49] = 0;
-
-        // Numero de colores importantes (si es 0 todos son importantes)
-        for (int i = 50; i < 54; i++)
-            encabezado[i] = 0;
-
-        return encabezado;
-    }*/
-
-
     private int get_posicion(int[] pos, int rgb) {
         for (int i = 0; i < pos.length; i++)
             if (pos[i] == rgb)
@@ -377,7 +299,7 @@ public class TrabajoEspecial {
     public byte[] compresor() {
 
         Huffman ej3 = new Huffman();
-        int[] pos = arrayHelperPos();
+        int[] simbolos = arrayHelperPos();
         float[] prob = arrayHelperProb();
         String[] code = ej3.do_Huffman(prob);
         //for (int i = 0; i < code.length; i++)
@@ -391,7 +313,7 @@ public class TrabajoEspecial {
                 int rgb = imgoriginal.getRGB(x, y);
                 Color color = new Color(rgb, true);
                 rgb = color.getRed();
-                String b = code[this.get_posicion(pos, rgb)];
+                String b = code[this.get_posicion(simbolos, rgb)];
                 for (int i = 0; i < b.length(); i++) {
                     to_add = (byte) (to_add << 1);
                     pos_buffer++;
@@ -424,10 +346,10 @@ public class TrabajoEspecial {
             writer.writeInt(imgoriginal.getWidth());
 
             writer.writeInt(imgoriginal.getHeight());
-            writer.writeInt(pos.length);
+            writer.writeInt(simbolos.length);
             int[] frecuencia = arrayHelperFrec();
-            for (int i = 0; i < pos.length; i++) {
-                writer.writeInt(pos[i]);
+            for (int i = 0; i < simbolos.length; i++) {
+                writer.writeInt(simbolos[i]);
                 writer.writeInt(frecuencia[i]);
             }
             writer.write(byte_mensaje);
@@ -452,60 +374,55 @@ public class TrabajoEspecial {
     public void descompresor() {
 
         try {
-            InputStream img = new FileInputStream("Compress.bin"); //CAMBIAR A RELATIVE PATH
-
-            DataInputStream str = new DataInputStream(img);
-
-            int ancho = str.readInt();
-            int alto = str.readInt();
-            int dimdist = str.readInt();
-            float[] prob = new float[dimdist];
-            int[] pos = new int[dimdist];
-            for (int i = 0; i < dimdist; i++) {
-                pos[i] = str.readInt();
-                prob[i] =  (float) str.readInt() / (ancho * alto);
-            }
-
             byte[] mensaje = Files.readAllBytes(new File("Compress.bin").toPath());
-            int offset = 1036;
 
+            int ancho = ByteBuffer.wrap(mensaje,0,4).getInt();
+            int alto = ByteBuffer.wrap(mensaje,4,8).getInt();
+            int dimdist = ByteBuffer.wrap(mensaje,8,12).getInt();
+            float[] prob = new float[dimdist];
+            int[] simbolo = new int[dimdist];
+            int k=0;
+            for (int i = 12; i <= (dimdist*8+4); i+=8,k++) {
+                simbolo[k] = ByteBuffer.wrap(mensaje,i,i+4).getInt();
+                prob[k] =  (float) ByteBuffer.wrap(mensaje,i+4,i+8).getInt() / (ancho * alto);
+
+            }
+            //DATO EMPIEZA EN 1036//256*4= para simbolos./12 primeros apra datos encabezado
+
+/*
+            for (int i=0;i<prob.length;i++)
+                System.out.println("prob[" + i + "]: "+prob[i]);*/
 
             Huffman desc = new Huffman();
             String[] codigo = desc.do_Huffman(prob);
 
-            //int[] seqrecuperada = new int[mensaje.length];
             Vector<Integer> seqrecuperada = new Vector<>();
 
             int bufferLength = 8;
-            int globalIndex = 0;
             byte mask = (byte) (1 << bufferLength - 1); // mask: 10000000
             int bufferPos = 0;
 
-            int i = offset; // indice en la lista de bytes (secuencia codificada)
-
-            while (globalIndex < (mensaje.length)) {
+            int i = 134; // indice en la lista de bytes (secuencia codificada)
+            while (i< (mensaje.length)) {
                 byte buffer = mensaje[i];
                 while (bufferPos < bufferLength) {
 
                     if ((buffer & mask) == mask) {  // 10000000 /si es 1
                         int arbolder = desc.mover_ArbolDerecha();
                         if(arbolder != -1) {
-                            seqrecuperada.insertElementAt(arbolder,globalIndex);
-                            globalIndex++;
+                            seqrecuperada.add(arbolder);
                         }
 
                     } else {
                         int arbolizq = desc.mover_ArbolIzquierda();
                         if (arbolizq != -1) {
-                            seqrecuperada.insertElementAt(arbolizq,globalIndex);
-                            globalIndex++;
+                            seqrecuperada.add(arbolizq);
                         }
                     }
                     buffer = (byte) (buffer << 1);
                     bufferPos++;
-                    //globalIndex++;
 
-                    if (globalIndex == (mensaje.length)) {
+                    if (i == (mensaje.length)) {
                         break;
                     }
                 }
@@ -513,10 +430,14 @@ public class TrabajoEspecial {
                 i++;
                 bufferPos = 0;
             }
-            System.out.println("ea");
-            int[] simbolos = devolver_simbolos(pos,seqrecuperada);
+            int[] simbolos = devolver_simbolos(simbolo,seqrecuperada);
             int j=0;
-            BufferedImage decode = new BufferedImage(ancho,alto,BufferedImage.TYPE_INT_RGB);
+            byte[] r = new byte[256];
+            byte[] g = new byte[256];
+            byte[] b = new byte[256];
+            ColorModel aux= this.imgoriginal.getColorModel();
+
+            BufferedImage decode = new BufferedImage(ancho,alto,BufferedImage.TYPE_BYTE_BINARY, (IndexColorModel) aux);
             for (int x = 0; x < ancho; x++) {
                 for (int y = 0; y < alto; y++) {
                     Color rgb = new Color(simbolos[j],simbolos[j],simbolos[j]);
@@ -524,6 +445,7 @@ public class TrabajoEspecial {
                     j++;
                 }
             }
+
 
             try {
                 File outFile = new File(System.getProperty("user.dir") + "/" + "Descompress" + ".bmp");
@@ -535,6 +457,7 @@ public class TrabajoEspecial {
 
             } catch (Exception e) {
                 System.out.println(e);
+                System.out.println("ea");
             }
 
 
