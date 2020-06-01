@@ -214,7 +214,11 @@ public class TrabajoEspecial {
         this.exitosorigej2 = exitos_original;
 
         Histograma prueba = new Histograma(exitos_original, "original");
+        Histograma hist_imagen_policia = new Histograma(exitos_ej2, "Histograma Imagen del Policia");
+        Histograma hist_mas_parecida = new Histograma(exitos_1, "Histograma Imagen mas parecida");
         prueba.Ver_Histograma();
+        hist_imagen_policia.Ver_Histograma();
+        hist_mas_parecida.Ver_Histograma();
 
 
         try {
