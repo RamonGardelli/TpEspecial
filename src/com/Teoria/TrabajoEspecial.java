@@ -391,7 +391,7 @@ public class TrabajoEspecial {
                 prob[k] =  (float) ByteBuffer.wrap(mensaje,i+4,i+8).getInt() / (ancho * alto);
 
             }
-            //DATO EMPIEZA EN 1036//256*4= para simbolos./12 primeros apra datos encabezado
+            //DATO EMPIEZA EN 134//256*4= para simbolos./12 primeros apra datos encabezado
 
 /*
             for (int i=0;i<prob.length;i++)
@@ -426,7 +426,7 @@ public class TrabajoEspecial {
                     buffer = (byte) (buffer << 1);
                     bufferPos++;
 
-                    if (i == (mensaje.length)) {
+                    if (i == mensaje.length) {
                         break;
                     }
                 }
@@ -434,20 +434,27 @@ public class TrabajoEspecial {
                 i++;
                 bufferPos = 0;
             }
+            //System.out.println(seqrecuperada.size());
             int[] simbolos = devolver_simbolos(simbolo,seqrecuperada);
-            int j=0;
+            //System.out.println(simbolos.length);
+            int j=12;
+            /*
             byte[] r = new byte[256];
             byte[] g = new byte[256];
-            byte[] b = new byte[256];
+            byte[] b = new byte[256];*/
             ColorModel aux= this.imgoriginal.getColorModel();
 
             BufferedImage decode = new BufferedImage(ancho,alto,BufferedImage.TYPE_BYTE_BINARY, (IndexColorModel) aux);
+
             for (int x = 0; x < ancho; x++) {
-                for (int y = 0; y < alto; y++) {
-                    Color rgb = new Color(simbolos[j],simbolos[j],simbolos[j]);
-                    decode.setRGB(x, y, rgb.getRGB());
-                    j++;
+                for (int y = 0; y< alto; y++) {
+                    if(j< simbolos.length) {
+                        Color rgb = new Color(simbolos[j], simbolos[j], simbolos[j]);
+                        decode.setRGB(x, y, rgb.getRGB());
+                        j++;
+                    }
                 }
+
             }
 
 
@@ -461,7 +468,6 @@ public class TrabajoEspecial {
 
             } catch (Exception e) {
                 System.out.println(e);
-                System.out.println("ea");
             }
 
 
