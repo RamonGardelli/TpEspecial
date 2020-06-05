@@ -1,6 +1,8 @@
 package com.Teoria;
 
 
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -274,6 +276,7 @@ public class TrabajoEspecial {
 
         return ret2;
     }
+
     public int[] arrayHelperFrec() {
 
         Vector<Integer> helper = new Vector<>();
@@ -306,8 +309,6 @@ public class TrabajoEspecial {
         int[] simbolos = arrayHelperPos();
         float[] prob = arrayHelperProb();
         String[] code = ej3.do_Huffman(prob);
-        //for (int i = 0; i < code.length; i++)
-        //System.out.println(" S "+pos[i]+" = "+code[i]+"");
 
         Vector<Byte> mensaje = new Vector<>();
         int pos_buffer = 0;
@@ -317,12 +318,11 @@ public class TrabajoEspecial {
                 int rgb = imgoriginal.getRGB(x, y);
                 Color color = new Color(rgb, true);
                 rgb = color.getRed();
-                String b = code[this.get_posicion(simbolos, rgb)];
-                for (int i = 0; i < b.length(); i++) {
+                String buffer = code[this.get_posicion(simbolos, rgb)];
+                for (int i = 0; i < buffer.length(); i++) {
                     to_add = (byte) (to_add << 1);
                     pos_buffer++;
-                    if (b.charAt(i) == '1')
-
+                    if (buffer.charAt(i) == '1')
                         to_add = (byte) (to_add | 1);
 
                     if (pos_buffer == 8) {
@@ -331,7 +331,11 @@ public class TrabajoEspecial {
                         to_add = 0;
                     }
                 }
+
             }
+        }
+        if (pos_buffer != 0) {
+            mensaje.add(to_add);
         }
         byte[] byte_mensaje = new byte[mensaje.size()];
         for (int i = 0; i < byte_mensaje.length; i++)
@@ -343,19 +347,42 @@ public class TrabajoEspecial {
                 outFile.delete();
                 outFile.createNewFile();
             }
-            FileOutputStream out= new FileOutputStream(outFile);
-
+            FileOutputStream out = new FileOutputStream(outFile);
             DataOutputStream writer = new DataOutputStream(out);
 
-            writer.writeInt(imgoriginal.getWidth());
+            Encabezado encabezado = new Encabezado();
+            encabezado.setAlto(imgoriginal.getHeight());
+            encabezado.setAncho(imgoriginal.getWidth());
+            encabezado.setLongsimbolos(simbolos.length);
+            encabezado.setSimbolos(simbolos);
+            encabezado.setFrecuencia(arrayHelperFrec());
 
-            writer.writeInt(imgoriginal.getHeight());
-            writer.writeInt(simbolos.length);
-            int[] frecuencia = arrayHelperFrec();
-            for (int i = 0; i < simbolos.length; i++) {
-                writer.writeInt(simbolos[i]);
-                writer.writeInt(frecuencia[i]);
-            }
+            IndexColorModel colormodelimg = (IndexColorModel) imgoriginal.getColorModel();
+
+            byte[] r = new byte[colormodelimg.getMapSize()];
+            byte[] g = new byte[colormodelimg.getMapSize()];
+            byte[] b = new byte[colormodelimg.getMapSize()];
+            colormodelimg.getReds(r);
+            colormodelimg.getGreens(g);
+            colormodelimg.getBlues(b);
+
+            encabezado.setPixels(colormodelimg.getPixelSize());
+            encabezado.setSizemap(colormodelimg.getMapSize());
+            encabezado.setR(r);
+            encabezado.setG(g);
+            encabezado.setB(b);
+
+
+            //crea streamer para object to byte[]
+            ByteArrayOutputStream streamer = new ByteArrayOutputStream();
+            ObjectOutputStream os = new ObjectOutputStream(streamer);
+            os.writeObject(encabezado);
+            os.close();
+            byte[] encabez = streamer.toByteArray();
+
+
+            writer.writeInt(encabez.length);
+            writer.write(encabez);//escribe encabezado
             writer.write(byte_mensaje);
             writer.close();
 
@@ -366,39 +393,40 @@ public class TrabajoEspecial {
     }
 
 
-
-    private int[] devolver_simbolos(int[]pos,Vector<Integer> seqrecuperada) {
-        int[] aux = new int[seqrecuperada.size()];
+    private int[] devolver_simbolos(int[] simbolos, Vector<Integer> seqrecuperada) {
+        int[] retornasimbolo = new int[seqrecuperada.size()];
         for (int i = 0; i < seqrecuperada.size(); i++) {
-            aux[i] = pos[seqrecuperada.elementAt(i)];
+            retornasimbolo[i] = simbolos[seqrecuperada.elementAt(i)];
         }
-        return aux;
+        return retornasimbolo;
     }
 
     public void descompresor() {
 
         try {
-            byte[] mensaje = Files.readAllBytes(new File("Compress.bin").toPath());
-
-            int ancho = ByteBuffer.wrap(mensaje,0,4).getInt();
-            int alto = ByteBuffer.wrap(mensaje,4,8).getInt();
-            int dimdist = ByteBuffer.wrap(mensaje,8,12).getInt();
-            float[] prob = new float[dimdist];
-            int[] simbolo = new int[dimdist];
-            int k=0;
-            for (int i = 12; i <= (dimdist*8+4); i+=8,k++) {
-                simbolo[k] = ByteBuffer.wrap(mensaje,i,i+4).getInt();
-                prob[k] =  (float) ByteBuffer.wrap(mensaje,i+4,i+8).getInt() / (ancho * alto);
-
+            byte[] decodificacion = Files.readAllBytes(new File("Compress.bin").toPath());
+            int dimencabezado = ByteBuffer.wrap(decodificacion, 0, 4).getInt();
+            byte[] encabezado_d = new byte[dimencabezado];//decodificacion
+            for (int i = 0; i < dimencabezado; i++) {
+                encabezado_d[i] = decodificacion[i + 4];
             }
-            //DATO EMPIEZA EN 134//256*4= para simbolos./12 primeros apra datos encabezado
 
-/*
-            for (int i=0;i<prob.length;i++)
-                System.out.println("prob[" + i + "]: "+prob[i]);*/
+            ByteArrayInputStream bs = new ByteArrayInputStream(encabezado_d); // bytes es el byte[]
+            ObjectInputStream is = new ObjectInputStream(bs);
+            Encabezado encabezado = (Encabezado) is.readObject();
+            is.close();
+            int[] simbolos = new int[encabezado.getDimSimbolos()];
+            for (int i = 0; i < simbolos.length; i++) {
+                simbolos[i] = encabezado.getSimbolosInt(i);
+            }
+
+            float[] probabilidades = new float[encabezado.getDimFrecuencia()];
+            for (int i = 0; i < probabilidades.length; i++) {
+                probabilidades[i] = (float) encabezado.getFrecuenciaInt(i) / (encabezado.getAlto() * encabezado.getAncho());
+            }
 
             Huffman desc = new Huffman();
-            String[] codigo = desc.do_Huffman(prob);
+            String[] codigo = desc.do_Huffman(probabilidades);
 
             Vector<Integer> seqrecuperada = new Vector<>();
 
@@ -406,14 +434,14 @@ public class TrabajoEspecial {
             byte mask = (byte) (1 << bufferLength - 1); // mask: 10000000
             int bufferPos = 0;
 
-            int i = 134; // indice en la lista de bytes (secuencia codificada)
-            while (i< (mensaje.length)) {
-                byte buffer = mensaje[i];
+            int i = dimencabezado + 4;
+            while (i < decodificacion.length) {
+                byte buffer = decodificacion[i];
                 while (bufferPos < bufferLength) {
 
                     if ((buffer & mask) == mask) {  // 10000000 /si es 1
                         int arbolder = desc.mover_ArbolDerecha();
-                        if(arbolder != -1) {
+                        if (arbolder != -1) {
                             seqrecuperada.add(arbolder);
                         }
 
@@ -426,33 +454,22 @@ public class TrabajoEspecial {
                     buffer = (byte) (buffer << 1);
                     bufferPos++;
 
-                    if (i == mensaje.length) {
-                        break;
-                    }
                 }
-
                 i++;
                 bufferPos = 0;
             }
-            //System.out.println(seqrecuperada.size());
-            int[] simbolos = devolver_simbolos(simbolo,seqrecuperada);
-            //System.out.println(simbolos.length);
-            int j=12;
-            /*
-            byte[] r = new byte[256];
-            byte[] g = new byte[256];
-            byte[] b = new byte[256];*/
-            ColorModel aux= this.imgoriginal.getColorModel();
+            int[] simbolosdecode = devolver_simbolos(simbolos, seqrecuperada);
+            int j = 0;
 
-            BufferedImage decode = new BufferedImage(ancho,alto,BufferedImage.TYPE_BYTE_BINARY, (IndexColorModel) aux);
+            IndexColorModel aux = new IndexColorModel(encabezado.getPixels(), encabezado.getSizemap(), encabezado.getR(), encabezado.getG(), encabezado.getB());
 
-            for (int x = 0; x < ancho; x++) {
-                for (int y = 0; y< alto; y++) {
-                    if(j< simbolos.length) {
-                        Color rgb = new Color(simbolos[j], simbolos[j], simbolos[j]);
-                        decode.setRGB(x, y, rgb.getRGB());
-                        j++;
-                    }
+            BufferedImage decode = new BufferedImage(encabezado.getAncho(), encabezado.getAlto(), BufferedImage.TYPE_BYTE_BINARY, aux);
+
+            for (int x = 0; x < encabezado.getAncho(); x++) {
+                for (int y = 0; y < encabezado.getAlto(); y++) {
+                    Color rgb = new Color(simbolosdecode[j], simbolosdecode[j], simbolosdecode[j]);
+                    decode.setRGB(x, y, rgb.getRGB());
+                    j++;
                 }
 
             }
@@ -464,7 +481,7 @@ public class TrabajoEspecial {
                     outFile.delete();
                     outFile.createNewFile();
                 }
-                ImageIO.write(decode,"BMP",outFile);
+                ImageIO.write(decode, "BMP", outFile);
 
             } catch (Exception e) {
                 System.out.println(e);
