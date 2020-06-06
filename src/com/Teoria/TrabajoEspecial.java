@@ -1,12 +1,9 @@
 package com.Teoria;
 
 
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
-
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
 import java.awt.image.IndexColorModel;
 import java.io.*;
 import java.nio.ByteBuffer;
@@ -16,223 +13,234 @@ import java.util.Vector;
 
 
 public class TrabajoEspecial {
-    private BufferedImage imgoriginal;
-    private BufferedImage img_1;
-    private BufferedImage img_2;
-    private BufferedImage img_3;
-    private BufferedImage img_4;
-    private BufferedImage img_5;
-    private BufferedImage img_ej2;
-    private BufferedImage puntej1;
-    private float[] puntej2_orig;
-    private float[] puntej2_pol;
-    private int[] exitosorigej2;
+    private BufferedImage Img_Original;
+    private BufferedImage Img_1;
+    private BufferedImage Img_2;
+    private BufferedImage Img_3;
+    private BufferedImage Img_4;
+    private BufferedImage Img_5;
+    private BufferedImage Img_Policia;
+
+    private BufferedImage imagenEjercicio1;
+/*
+    private float[] distribucionImagenOriginal;
+    private float[] distribucionImagenPolicia;
+    private float[] distribucionImagenEj1;
+
+    private int[] frecuenciasImagenOriginal;
+    private int[] frecuenciasImagenPolicia;
+    private int[] frecuenciasImagenEj1;*/
+
+    public BufferedImage getImg_Original() {
+        return Img_Original;
+    }
 
     public TrabajoEspecial() {
         //CARGAR IMAGEN
         try {
-            this.imgoriginal = ImageIO.read(new File("src\\com\\Teoria\\Will(Original).bmp"));
-            this.img_1 = ImageIO.read(new File("src\\com\\Teoria\\Will_1.bmp"));
-            this.img_2 = ImageIO.read(new File("src\\com\\Teoria\\Will_2.bmp"));
-            this.img_3 = ImageIO.read(new File("src\\com\\Teoria\\Will_3.bmp"));
-            this.img_4 = ImageIO.read(new File("src\\com\\Teoria\\Will_4.bmp"));
-            this.img_5 = ImageIO.read(new File("src\\com\\Teoria\\Will_5.bmp"));
-            this.img_ej2 = ImageIO.read(new File("src\\com\\Teoria\\Will_ej2.bmp"));
+            this.Img_Original = ImageIO.read(new File("img\\Will(Original).bmp"));
+            this.Img_1 = ImageIO.read(new File("img\\Will_1.bmp"));
+            this.Img_2 = ImageIO.read(new File("img\\Will_2.bmp"));
+            this.Img_3 = ImageIO.read(new File("img\\Will_3.bmp"));
+            this.Img_4 = ImageIO.read(new File("img\\Will_4.bmp"));
+            this.Img_5 = ImageIO.read(new File("img\\Will_5.bmp"));
+            this.Img_Policia = ImageIO.read(new File("img\\Will_ej2.bmp"));
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
 
 
-    public Vector<Tupla> Calcular_CoefCorrelacion() {
+    public void Ejercicio1() {
 
-        Desvio_Estandar imgoriginal_de = new Desvio_Estandar();
-        Desvio_Estandar img_1_de = new Desvio_Estandar();
-        Desvio_Estandar img_2_de = new Desvio_Estandar();
-        Desvio_Estandar img_3_de = new Desvio_Estandar();
-        Desvio_Estandar img_4_de = new Desvio_Estandar();
-        Desvio_Estandar img_5_de = new Desvio_Estandar();
+        Desvio_Estandar De_ImgOriginal = new Desvio_Estandar();
+        Desvio_Estandar De_Img1 = new Desvio_Estandar();
+        Desvio_Estandar De_Img2 = new Desvio_Estandar();
+        Desvio_Estandar De_Img3 = new Desvio_Estandar();
+        Desvio_Estandar De_Img4 = new Desvio_Estandar();
+        Desvio_Estandar De_Img5 = new Desvio_Estandar();
 
-        Covarianza imgo_cov_1 = new Covarianza();
-        Covarianza imgo_cov_2 = new Covarianza();
-        Covarianza imgo_cov_3 = new Covarianza();
-        Covarianza imgo_cov_4 = new Covarianza();
-        Covarianza imgo_cov_5 = new Covarianza();
+        Covarianza ImgOrig_Cov_Img1 = new Covarianza();
+        Covarianza ImgOrig_Cov_Img2 = new Covarianza();
+        Covarianza ImgOrig_Cov_Img3 = new Covarianza();
+        Covarianza ImgOrig_Cov_Img4 = new Covarianza();
+        Covarianza ImgOrig_Cov_Img5 = new Covarianza();
         Vector<Tupla> r = new Vector<>(5);
 
         //LEER IMAGEN
-        for (int x = 0; x < imgoriginal.getWidth(); x++) {
-            for (int y = 0; y < imgoriginal.getHeight(); y++) {
-                int rgb_original = imgoriginal.getRGB(x, y);
-                int rgb_1 = img_1.getRGB(x, y);
-                int rgb_2 = img_2.getRGB(x, y);
-                int rgb_3 = img_3.getRGB(x, y);
-                int rgb_4 = img_4.getRGB(x, y);
-                int rgb_5 = img_5.getRGB(x, y);
-                Color color = new Color(rgb_original, true);
-                Color color1 = new Color(rgb_1, true);
-                Color color2 = new Color(rgb_2, true);
-                Color color3 = new Color(rgb_3, true);
-                Color color4 = new Color(rgb_4, true);
-                Color color5 = new Color(rgb_5, true);
-                rgb_original = color.getRed();
-                rgb_1 = color1.getRed();
-                rgb_2 = color2.getRed();
-                rgb_3 = color3.getRed();
-                rgb_4 = color4.getRed();
-                rgb_5 = color5.getRed();
+        for (int x = 0; x < Img_Original.getWidth(); x++) {
+            for (int y = 0; y < Img_Original.getHeight(); y++) {
+                int rgb_ImgOriginal = Img_Original.getRGB(x, y);
+                int rgb_Img1 = Img_1.getRGB(x, y);
+                int rgb_Img2 = Img_2.getRGB(x, y);
+                int rgb_Img3 = Img_3.getRGB(x, y);
+                int rgb_Img4 = Img_4.getRGB(x, y);
+                int rgb_Img5 = Img_5.getRGB(x, y);
+                Color color = new Color(rgb_ImgOriginal, true);
+                Color color1 = new Color(rgb_Img1, true);
+                Color color2 = new Color(rgb_Img2, true);
+                Color color3 = new Color(rgb_Img3, true);
+                Color color4 = new Color(rgb_Img4, true);
+                Color color5 = new Color(rgb_Img5, true);
+                rgb_ImgOriginal = color.getRed();
+                rgb_Img1 = color1.getRed();
+                rgb_Img2 = color2.getRed();
+                rgb_Img3 = color3.getRed();
+                rgb_Img4 = color4.getRed();
+                rgb_Img5 = color5.getRed();
 
                 //LO QUE SIGUE ES EL CALCULO DEL INCISO 1
                 //ACA CALCULAMOS DESVIO ORIGINAL
-                imgoriginal_de.Calcular_Desvio_Estandar(rgb_original);
+                De_ImgOriginal.Calcular_Desvio_Estandar(rgb_ImgOriginal);
 
                 // ACA CALCULAMOS EL DESVIO DE LA IMAGEN i
-                img_1_de.Calcular_Desvio_Estandar(rgb_1);
-                img_2_de.Calcular_Desvio_Estandar(rgb_2);
-                img_3_de.Calcular_Desvio_Estandar(rgb_3);
-                img_4_de.Calcular_Desvio_Estandar(rgb_4);
-                img_5_de.Calcular_Desvio_Estandar(rgb_5);
+                De_Img1.Calcular_Desvio_Estandar(rgb_Img1);
+                De_Img2.Calcular_Desvio_Estandar(rgb_Img2);
+                De_Img3.Calcular_Desvio_Estandar(rgb_Img3);
+                De_Img4.Calcular_Desvio_Estandar(rgb_Img4);
+                De_Img5.Calcular_Desvio_Estandar(rgb_Img5);
 
 
                 // COVARIANZA ACUMULADA
-                imgo_cov_1.Calcular_Covarianza(rgb_original, rgb_1);
-                imgo_cov_2.Calcular_Covarianza(rgb_original, rgb_2);
-                imgo_cov_3.Calcular_Covarianza(rgb_original, rgb_3);
-                imgo_cov_4.Calcular_Covarianza(rgb_original, rgb_4);
-                imgo_cov_5.Calcular_Covarianza(rgb_original, rgb_5);
+                ImgOrig_Cov_Img1.Calcular_Covarianza(rgb_ImgOriginal, rgb_Img1);
+                ImgOrig_Cov_Img2.Calcular_Covarianza(rgb_ImgOriginal, rgb_Img2);
+                ImgOrig_Cov_Img3.Calcular_Covarianza(rgb_ImgOriginal, rgb_Img3);
+                ImgOrig_Cov_Img4.Calcular_Covarianza(rgb_ImgOriginal, rgb_Img4);
+                ImgOrig_Cov_Img5.Calcular_Covarianza(rgb_ImgOriginal, rgb_Img5);
             }
 
         }
         // r = CovAB / (desvio(A)*desvio(B))
 
 
-        r.add(0, new Tupla(imgo_cov_1.get_Covarianza() / (imgoriginal_de.get_Desvio_Estandar() * img_1_de.get_Desvio_Estandar()), "Img1"));
-        r.add(1, new Tupla(imgo_cov_2.get_Covarianza() / (imgoriginal_de.get_Desvio_Estandar() * img_2_de.get_Desvio_Estandar()), "Img2"));
-        r.add(2, new Tupla(imgo_cov_3.get_Covarianza() / (imgoriginal_de.get_Desvio_Estandar() * img_3_de.get_Desvio_Estandar()), "Img3"));
-        r.add(3, new Tupla(imgo_cov_4.get_Covarianza() / (imgoriginal_de.get_Desvio_Estandar() * img_4_de.get_Desvio_Estandar()), "Img4"));
-        r.add(4, new Tupla(imgo_cov_5.get_Covarianza() / (imgoriginal_de.get_Desvio_Estandar() * img_5_de.get_Desvio_Estandar()), "Img5"));
+        r.add(0, new Tupla(ImgOrig_Cov_Img1.get_Covarianza() / (De_ImgOriginal.get_Desvio_Estandar() * De_Img1.get_Desvio_Estandar()), "Img1"));
+        r.add(1, new Tupla(ImgOrig_Cov_Img2.get_Covarianza() / (De_ImgOriginal.get_Desvio_Estandar() * De_Img2.get_Desvio_Estandar()), "Img2"));
+        r.add(2, new Tupla(ImgOrig_Cov_Img3.get_Covarianza() / (De_ImgOriginal.get_Desvio_Estandar() * De_Img3.get_Desvio_Estandar()), "Img3"));
+        r.add(3, new Tupla(ImgOrig_Cov_Img4.get_Covarianza() / (De_ImgOriginal.get_Desvio_Estandar() * De_Img4.get_Desvio_Estandar()), "Img4"));
+        r.add(4, new Tupla(ImgOrig_Cov_Img5.get_Covarianza() / (De_ImgOriginal.get_Desvio_Estandar() * De_Img5.get_Desvio_Estandar()), "Img5"));
         Collections.sort(r);
         Collections.reverse(r);
 
         if (r.elementAt(0).getNombre() == "Img1")
-            this.puntej1 = this.img_1;
+            this.imagenEjercicio1 = this.Img_1;
         else if (r.elementAt(0).getNombre() == "Img2")
-            this.puntej1 = this.img_2;
+            this.imagenEjercicio1 = this.Img_2;
         else if (r.elementAt(0).getNombre() == "Img3")
-            this.puntej1 = this.img_3;
+            this.imagenEjercicio1 = this.Img_3;
         else if (r.elementAt(0).getNombre() == "Img4")
-            this.puntej1 = this.img_4;
+            this.imagenEjercicio1 = this.Img_4;
         else if (r.elementAt(0).getNombre() == "Img5")
-            this.puntej1 = this.img_5;
+            this.imagenEjercicio1 = this.Img_5;
 
         try {
-            File outFile = new File(System.getProperty("user.dir") + "/" + "Factores Ejercicio 1" + ".txt");
+            File outFile = new File(System.getProperty("user.dir") + "/resultados/" + "Factores de correlacion Ejercicio 1" + ".txt");
             if (outFile.exists()) {
                 outFile.delete();
                 outFile.createNewFile();
             }
             FileWriter writer = new FileWriter(outFile);
-            writer.write(r.elementAt(0).getNombre() + ": " + r.elementAt(0).getFactor() + "\n");
-            writer.write(r.elementAt(1).getNombre() + ": " + r.elementAt(1).getFactor() + "\n");
-            writer.write(r.elementAt(2).getNombre() + ": " + r.elementAt(2).getFactor() + "\n");
-            writer.write(r.elementAt(3).getNombre() + ": " + r.elementAt(3).getFactor() + "\n");
-            writer.write(r.elementAt(4).getNombre() + ": " + r.elementAt(4).getFactor() + "\n");
+            writer.write("Factor de correlacion entre imagen original e imagen 1" + ": " + r.elementAt(0).getFactor() + "\n");
+            writer.write("Factor de correlacion entre imagen original e imagen 2" + ": " + r.elementAt(1).getFactor() + "\n");
+            writer.write("Factor de correlacion entre imagen original e imagen 3" + ": " + r.elementAt(2).getFactor() + "\n");
+            writer.write("Factor de correlacion entre imagen original e imagen 4" + ": " + r.elementAt(3).getFactor() + "\n");
+            writer.write("Factor de correlacion entre imagen original e imagen 5" + ": " + r.elementAt(4).getFactor() + "\n");
             writer.close();
 
         } catch (Exception e) {
         }
-
-
-        return r;
     }
 
 
-    public void ej2() {
+    public void Ejercicio2() {
 
-        float[] p_original = new float[256];
-        float[] p_ej1 = new float[256];
-        float[] p_ej2 = new float[256];
-        int[] exitos_original = new int[256];
-        int[] exitos_1 = new int[256];
-        int[] exitos_ej2 = new int[256];
-        for (int i = 0; i < p_original.length; i++) {
-            p_original[i] = 0f;
-            p_ej1[i] = 0f;
-            p_ej2[i] = 0f;
-            exitos_original[i] = 0;
-            exitos_1[i] = 0;
-            exitos_ej2[i] = 0;
+        float[] probabilidad_ImgOriginal = new float[256];
+        float[] probabilidad_ImgEj1 = new float[256];
+        float[] probabilidad_ImgPolicia = new float[256];
+        int[] exitos_ImgOriginal = new int[256];
+        int[] exitos_ImgEj1 = new int[256];
+        int[] exitos_ImgPolicia = new int[256];
+        for (int i = 0; i < probabilidad_ImgOriginal.length; i++) {
+            probabilidad_ImgOriginal[i] = 0f;
+            probabilidad_ImgEj1[i] = 0f;
+            probabilidad_ImgPolicia[i] = 0f;
+            exitos_ImgOriginal[i] = 0;
+            exitos_ImgEj1[i] = 0;
+            exitos_ImgPolicia[i] = 0;
         }
         int m = 0;
 
-        Media media_o = new Media();
-        Media media_ej1 = new Media();
-        Media media_ej2 = new Media();
+        Media media_ImgOriginal = new Media();
+        Media media_ImgEj1 = new Media();
+        Media media_ImgPolicia = new Media();
 
-        Desvio_Estandar imgoriginal_de = new Desvio_Estandar();
-        Desvio_Estandar img_ej1_de = new Desvio_Estandar();
-        Desvio_Estandar img_ej2_de = new Desvio_Estandar();
+        Desvio_Estandar De_ImgOriginal = new Desvio_Estandar();
+        Desvio_Estandar De_ImgEj1 = new Desvio_Estandar();
+        Desvio_Estandar De_ImgPolicia = new Desvio_Estandar();
 
-        for (int x = 0; x < imgoriginal.getWidth(); x++) {
-            for (int y = 0; y < imgoriginal.getHeight(); y++) {
-                int rgb_original = imgoriginal.getRGB(x, y);
-                int rgb_1 = puntej1.getRGB(x, y);
-                int rgb_ej2 = img_ej2.getRGB(x, y);
-                Color color = new Color(rgb_original, true);
-                Color color1 = new Color(rgb_1, true);
-                Color color2 = new Color(rgb_ej2, true);
-                rgb_original = color.getRed();
-                rgb_1 = color1.getRed();
-                rgb_ej2 = color2.getRed();
+        for (int x = 0; x < Img_Original.getWidth(); x++) {
+            for (int y = 0; y < Img_Original.getHeight(); y++) {
+                int rgb_ImgOriginal = Img_Original.getRGB(x, y);
+                int rgb_ImgEj1 = imagenEjercicio1.getRGB(x, y);
+                int rgb_ImgPolicia = Img_Policia.getRGB(x, y);
+                Color color = new Color(rgb_ImgOriginal, true);
+                Color color1 = new Color(rgb_ImgEj1, true);
+                Color color2 = new Color(rgb_ImgPolicia, true);
+                rgb_ImgOriginal = color.getRed();
+                rgb_ImgEj1 = color1.getRed();
+                rgb_ImgPolicia = color2.getRed();
 
-                exitos_original[rgb_original]++;
-                exitos_1[rgb_1]++;
-                exitos_ej2[rgb_ej2]++;
+                exitos_ImgOriginal[rgb_ImgOriginal]++;
+                exitos_ImgEj1[rgb_ImgEj1]++;
+                exitos_ImgPolicia[rgb_ImgPolicia]++;
                 m++;
 
 
-                media_o.Calcular_Media(rgb_original);
-                media_ej1.Calcular_Media(rgb_1);
-                media_ej2.Calcular_Media(rgb_ej2);
+                media_ImgOriginal.Calcular_Media(rgb_ImgOriginal);
+                media_ImgEj1.Calcular_Media(rgb_ImgEj1);
+                media_ImgPolicia.Calcular_Media(rgb_ImgPolicia);
 
-                imgoriginal_de.Calcular_Desvio_Estandar(rgb_original);
-                img_ej1_de.Calcular_Desvio_Estandar(rgb_1);
-                img_ej2_de.Calcular_Desvio_Estandar(rgb_ej2);
+                De_ImgOriginal.Calcular_Desvio_Estandar(rgb_ImgOriginal);
+                De_ImgEj1.Calcular_Desvio_Estandar(rgb_ImgEj1);
+                De_ImgPolicia.Calcular_Desvio_Estandar(rgb_ImgPolicia);
 
             }
         }
         // Distribucion Histograma
 
-        for (int i = 0; i < p_original.length; i++) {
-            p_original[i] = (float) exitos_original[i] / m;
-            p_ej1[i] = (float) exitos_1[i] / m;
-            p_ej2[i] = (float) exitos_ej2[i] / m;
+        for (int i = 0; i < probabilidad_ImgOriginal.length; i++) {
+            probabilidad_ImgOriginal[i] = (float) exitos_ImgOriginal[i] / m;
+            probabilidad_ImgEj1[i] = (float) exitos_ImgEj1[i] / m;
+            probabilidad_ImgPolicia[i] = (float) exitos_ImgPolicia[i] / m;
 
         }
-        //distribucion de las imagenes
-        this.puntej2_orig = p_original;
-        this.puntej2_pol = p_ej2;
+        /*
+        //distribuciones y frecuencias de las imagenes/////////////////////////////////////
+        distribucionImagenOriginal = probabilidad_ImgOriginal;
+        distribucionImagenPolicia = probabilidad_ImgPolicia;
+        distribucionImagenEj1 = probabilidad_ImgEj1;
+        frecuenciasImagenOriginal = exitos_ImgOriginal;
+        frecuenciasImagenPolicia = exitos_ImgPolicia;
+        frecuenciasImagenEj1 = exitos_ImgEj1;*/
 
-        this.exitosorigej2 = exitos_original;
-
-        Histograma prueba = new Histograma(exitos_original, "original");
-        Histograma hist_imagen_policia = new Histograma(exitos_ej2, "Histograma Imagen del Policia");
-        Histograma hist_mas_parecida = new Histograma(exitos_1, "Histograma Imagen mas parecida");
-        prueba.Ver_Histograma();
-        hist_imagen_policia.Ver_Histograma();
-        hist_mas_parecida.Ver_Histograma();
+        //////////////////////////////
+        Histograma hist_ImgOriginal = new Histograma(exitos_ImgOriginal, "Histograma de Imagen original");
+        Histograma hist_ImgPolicia = new Histograma(exitos_ImgPolicia, "Histograma de Imagen del Policia");
+        Histograma hist_ImgEj1 = new Histograma(exitos_ImgEj1, "Histograma Imagen mas parecida");
+        hist_ImgOriginal.Ver_Histograma();
+        hist_ImgPolicia.Ver_Histograma();
+        hist_ImgEj1.Ver_Histograma();
 
 
         try {
-            File outFile = new File(System.getProperty("user.dir") + "/" + "Desvios y Medias Ejercicio 2" + ".txt");
+            File outFile = new File(System.getProperty("user.dir") + "/resultados/" + "Desvios y Medias Ejercicio 2" + ".txt");
             if (outFile.exists()) {
                 outFile.delete();
                 outFile.createNewFile();
             }
             FileWriter writer = new FileWriter(outFile);
-            writer.write("ORIGINAL - Media: " + media_o.get_Media() + "  Desvio Estandar: " + imgoriginal_de.get_Desvio_Estandar() + "\n");
-            writer.write("IMG1 - Media : " + media_ej1.get_Media() + "  Desvio Estandar: " + img_ej1_de.get_Desvio_Estandar() + "\n");
-            writer.write("EJ2 - Media: " + media_ej2.get_Media() + "  Desvio Estandar: " + img_ej2_de.get_Desvio_Estandar() + "\n");
+            writer.write("Imagen Original - Media: " + media_ImgOriginal.get_Media() + "  Desvio Estandar: " + De_ImgOriginal.get_Desvio_Estandar() + "\n");
+            writer.write("Imagen mas parecida  - Media : " + media_ImgEj1.get_Media() + "  Desvio Estandar: " + De_ImgEj1.get_Desvio_Estandar() + "\n");
+            writer.write("Imagen del Policia - Media: " + media_ImgPolicia.get_Media() + "  Desvio Estandar: " + De_ImgPolicia.get_Desvio_Estandar() + "\n");
             writer.close();
 
         } catch (Exception e) {
@@ -240,85 +248,24 @@ public class TrabajoEspecial {
 
     }
 
-    public int[] arrayHelperPos() {
 
-        Vector<Integer> helper = new Vector<>();
+    public void Compresor(float[] distribucionImg, int[] frecuenciasImg, BufferedImage Imagen, String nombreArchivo) {
 
+        Helper helperCompresor = new Helper();
+        Huffman Huff_Ej3 = new Huffman();
+        int[] Simbolos = helperCompresor.arrayHelperPosicion(distribucionImg);
+        float[] Probabilidad = helperCompresor.arrayHelperProbabilidad(distribucionImg);
+        String[] Codigo_Huffman = Huff_Ej3.do_Huffman(Probabilidad);
 
-        for (int i = 0; i < this.puntej2_orig.length; i++) {
-            if (this.puntej2_orig[i] != 0) {
-                helper.add(i);
-            }
-        }
-        int[] ret = new int[helper.size()];
-
-        for (int j = 0; j < helper.size(); j++) {
-            ret[j] = helper.elementAt(j);
-        }
-        return ret;
-    }
-
-    public float[] arrayHelperProb() {
-
-        Vector<Float> helper = new Vector<>();
-
-
-        for (int i = 0; i < this.puntej2_orig.length; i++) {
-            if (this.puntej2_orig[i] != 0) {
-                helper.add(puntej2_orig[i]);
-            }
-        }
-
-        float[] ret2 = new float[helper.size()];
-        for (int j = 0; j < helper.size(); j++) {
-            ret2[j] = helper.elementAt(j);
-        }
-
-        return ret2;
-    }
-
-    public int[] arrayHelperFrec() {
-
-        Vector<Integer> helper = new Vector<>();
-
-
-        for (int i = 0; i < this.exitosorigej2.length; i++) {
-            if (this.exitosorigej2[i] != 0) {
-                helper.add(exitosorigej2[i]);
-            }
-        }
-
-        int[] ret2 = new int[helper.size()];
-        for (int j = 0; j < helper.size(); j++) {
-            ret2[j] = helper.elementAt(j);
-        }
-
-        return ret2;
-    }
-
-    private int get_posicion(int[] pos, int rgb) {
-        for (int i = 0; i < pos.length; i++)
-            if (pos[i] == rgb)
-                return i;
-        return -1;
-    }
-
-    public byte[] compresor() {
-
-        Huffman ej3 = new Huffman();
-        int[] simbolos = arrayHelperPos();
-        float[] prob = arrayHelperProb();
-        String[] code = ej3.do_Huffman(prob);
-
-        Vector<Byte> mensaje = new Vector<>();
+        Vector<Byte> Mensaje_Comprimido = new Vector<>();
         int pos_buffer = 0;
         byte to_add = 0;
-        for (int x = 0; x < imgoriginal.getWidth(); x++) {
-            for (int y = 0; y < imgoriginal.getHeight(); y++) {
-                int rgb = imgoriginal.getRGB(x, y);
-                Color color = new Color(rgb, true);
-                rgb = color.getRed();
-                String buffer = code[this.get_posicion(simbolos, rgb)];
+        for (int x = 0; x < Imagen.getWidth(); x++) {
+            for (int y = 0; y < Imagen.getHeight(); y++) {
+                int rgb = Imagen.getRGB(x, y);
+                Color Color_Img = new Color(rgb, true);
+                rgb = Color_Img.getRed();
+                String buffer = Codigo_Huffman[helperCompresor.get_posicion_del_simbolo(Simbolos, rgb)];
                 for (int i = 0; i < buffer.length(); i++) {
                     to_add = (byte) (to_add << 1);
                     pos_buffer++;
@@ -327,7 +274,7 @@ public class TrabajoEspecial {
 
                     if (pos_buffer == 8) {
                         pos_buffer = 0;
-                        mensaje.add(to_add);
+                        Mensaje_Comprimido.add(to_add);
                         to_add = 0;
                     }
                 }
@@ -335,14 +282,14 @@ public class TrabajoEspecial {
             }
         }
         if (pos_buffer != 0) {
-            mensaje.add(to_add);
+            Mensaje_Comprimido.add(to_add);
         }
-        byte[] byte_mensaje = new byte[mensaje.size()];
-        for (int i = 0; i < byte_mensaje.length; i++)
-            byte_mensaje[i] = mensaje.get(i);
+        byte[] Mensaje_en_Bytes = new byte[Mensaje_Comprimido.size()];
+        for (int i = 0; i < Mensaje_en_Bytes.length; i++)
+            Mensaje_en_Bytes[i] = Mensaje_Comprimido.get(i);
 
         try {
-            File outFile = new File(System.getProperty("user.dir") + "/" + "Compress" + ".bin");
+            File outFile = new File(System.getProperty("user.dir") + "/resultados/" + nombreArchivo + ".bin");
             if (outFile.exists()) {
                 outFile.delete();
                 outFile.createNewFile();
@@ -350,105 +297,96 @@ public class TrabajoEspecial {
             FileOutputStream out = new FileOutputStream(outFile);
             DataOutputStream writer = new DataOutputStream(out);
 
-            Encabezado encabezado = new Encabezado();
-            encabezado.setAlto(imgoriginal.getHeight());
-            encabezado.setAncho(imgoriginal.getWidth());
-            encabezado.setLongsimbolos(simbolos.length);
-            encabezado.setSimbolos(simbolos);
-            encabezado.setFrecuencia(arrayHelperFrec());
+            Encabezado Encabezado_Img = new Encabezado();
+            Encabezado_Img.setAlto(Imagen.getHeight());
+            Encabezado_Img.setAncho(Imagen.getWidth());
+            Encabezado_Img.setLongsimbolos(Simbolos.length);
+            Encabezado_Img.setSimbolos(Simbolos);
+            Encabezado_Img.setFrecuencia(helperCompresor.arrayHelperFrecuencia(frecuenciasImg));
 
-            IndexColorModel colormodelimg = (IndexColorModel) imgoriginal.getColorModel();
+            IndexColorModel Color_Model_Img = (IndexColorModel) Imagen.getColorModel();
 
-            byte[] r = new byte[colormodelimg.getMapSize()];
-            byte[] g = new byte[colormodelimg.getMapSize()];
-            byte[] b = new byte[colormodelimg.getMapSize()];
-            colormodelimg.getReds(r);
-            colormodelimg.getGreens(g);
-            colormodelimg.getBlues(b);
+            byte[] r = new byte[Color_Model_Img.getMapSize()];
+            byte[] g = new byte[Color_Model_Img.getMapSize()];
+            byte[] b = new byte[Color_Model_Img.getMapSize()];
+            Color_Model_Img.getReds(r);
+            Color_Model_Img.getGreens(g);
+            Color_Model_Img.getBlues(b);
 
-            encabezado.setPixels(colormodelimg.getPixelSize());
-            encabezado.setSizemap(colormodelimg.getMapSize());
-            encabezado.setR(r);
-            encabezado.setG(g);
-            encabezado.setB(b);
+            Encabezado_Img.setPixels(Color_Model_Img.getPixelSize());
+            Encabezado_Img.setSizemap(Color_Model_Img.getMapSize());
+            Encabezado_Img.setR(r);
+            Encabezado_Img.setG(g);
+            Encabezado_Img.setB(b);
 
 
             //crea streamer para object to byte[]
             ByteArrayOutputStream streamer = new ByteArrayOutputStream();
             ObjectOutputStream os = new ObjectOutputStream(streamer);
-            os.writeObject(encabezado);
+            os.writeObject(Encabezado_Img);
             os.close();
-            byte[] encabez = streamer.toByteArray();
+            byte[] Encabezado_en_Bytes = streamer.toByteArray();
 
 
-            writer.writeInt(encabez.length);
-            writer.write(encabez);//escribe encabezado
-            writer.write(byte_mensaje);
+            writer.writeInt(Encabezado_en_Bytes.length);
+            writer.write(Encabezado_en_Bytes);//escribe encabezado
+            writer.write(Mensaje_en_Bytes);
             writer.close();
 
         } catch (Exception e) {
         }
 
-        return byte_mensaje;
     }
 
 
-    private int[] devolver_simbolos(int[] simbolos, Vector<Integer> seqrecuperada) {
-        int[] retornasimbolo = new int[seqrecuperada.size()];
-        for (int i = 0; i < seqrecuperada.size(); i++) {
-            retornasimbolo[i] = simbolos[seqrecuperada.elementAt(i)];
-        }
-        return retornasimbolo;
-    }
-
-    public void descompresor() {
+    public void Descompresor(String nombreArchivo, String archivoComprimido) {
 
         try {
-            byte[] decodificacion = Files.readAllBytes(new File("Compress.bin").toPath());
-            int dimencabezado = ByteBuffer.wrap(decodificacion, 0, 4).getInt();
-            byte[] encabezado_d = new byte[dimencabezado];//decodificacion
-            for (int i = 0; i < dimencabezado; i++) {
-                encabezado_d[i] = decodificacion[i + 4];
+            byte[] Mensaje_Decodificado = Files.readAllBytes(new File("resultados\\" + archivoComprimido + ".bin").toPath());
+            int Dim_Encabezado = ByteBuffer.wrap(Mensaje_Decodificado, 0, 4).getInt();
+            byte[] Encabezado_Decodificado = new byte[Dim_Encabezado];
+            for (int i = 0; i < Dim_Encabezado; i++) {
+                Encabezado_Decodificado[i] = Mensaje_Decodificado[i + 4];
             }
 
-            ByteArrayInputStream bs = new ByteArrayInputStream(encabezado_d); // bytes es el byte[]
-            ObjectInputStream is = new ObjectInputStream(bs);
-            Encabezado encabezado = (Encabezado) is.readObject();
-            is.close();
-            int[] simbolos = new int[encabezado.getDimSimbolos()];
-            for (int i = 0; i < simbolos.length; i++) {
-                simbolos[i] = encabezado.getSimbolosInt(i);
+            ByteArrayInputStream BufferBytes = new ByteArrayInputStream(Encabezado_Decodificado); // bytes es el byte[]
+            ObjectInputStream InputStreamEncabezado = new ObjectInputStream(BufferBytes);
+            Encabezado Encabezado_Img = (Encabezado) InputStreamEncabezado.readObject();
+            InputStreamEncabezado.close();
+            int[] Simbolos = new int[Encabezado_Img.getDimSimbolos()];
+            for (int i = 0; i < Simbolos.length; i++) {
+                Simbolos[i] = Encabezado_Img.getSimbolosInt(i);
             }
 
-            float[] probabilidades = new float[encabezado.getDimFrecuencia()];
-            for (int i = 0; i < probabilidades.length; i++) {
-                probabilidades[i] = (float) encabezado.getFrecuenciaInt(i) / (encabezado.getAlto() * encabezado.getAncho());
+            float[] Probabilidades = new float[Encabezado_Img.getDimFrecuencia()];
+            for (int i = 0; i < Probabilidades.length; i++) {
+                Probabilidades[i] = (float) Encabezado_Img.getFrecuenciaInt(i) / (Encabezado_Img.getAlto() * Encabezado_Img.getAncho());
             }
 
-            Huffman desc = new Huffman();
-            String[] codigo = desc.do_Huffman(probabilidades);
+            Huffman Huff_Decodificado = new Huffman();
+            String[] Codigo_Huffman = Huff_Decodificado.do_Huffman(Probabilidades);
 
-            Vector<Integer> seqrecuperada = new Vector<>();
+            Vector<Integer> Secuencia_Recuperada = new Vector<>();
 
             int bufferLength = 8;
-            byte mask = (byte) (1 << bufferLength - 1); // mask: 10000000
+            byte Mascara = (byte) (1 << bufferLength - 1); // Mascara: 10000000
             int bufferPos = 0;
 
-            int i = dimencabezado + 4;
-            while (i < decodificacion.length) {
-                byte buffer = decodificacion[i];
+            int i = Dim_Encabezado + 4;
+            while (i < Mensaje_Decodificado.length) {
+                byte buffer = Mensaje_Decodificado[i];
                 while (bufferPos < bufferLength) {
 
-                    if ((buffer & mask) == mask) {  // 10000000 /si es 1
-                        int arbolder = desc.mover_ArbolDerecha();
+                    if ((buffer & Mascara) == Mascara) {  // 10000000 /si es 1
+                        int arbolder = Huff_Decodificado.mover_ArbolDerecha();
                         if (arbolder != -1) {
-                            seqrecuperada.add(arbolder);
+                            Secuencia_Recuperada.add(arbolder);
                         }
 
                     } else {
-                        int arbolizq = desc.mover_ArbolIzquierda();
+                        int arbolizq = Huff_Decodificado.mover_ArbolIzquierda();
                         if (arbolizq != -1) {
-                            seqrecuperada.add(arbolizq);
+                            Secuencia_Recuperada.add(arbolizq);
                         }
                     }
                     buffer = (byte) (buffer << 1);
@@ -458,17 +396,20 @@ public class TrabajoEspecial {
                 i++;
                 bufferPos = 0;
             }
-            int[] simbolosdecode = devolver_simbolos(simbolos, seqrecuperada);
+
+            Helper Decode_Helper = new Helper();
+
+            int[] Simbolos_Decodificados = Decode_Helper.recuperar_simbolos_decodificados(Simbolos, Secuencia_Recuperada);
+
+
+            IndexColorModel Icm_Imagen = new IndexColorModel(Encabezado_Img.getPixels(), Encabezado_Img.getSizemap(), Encabezado_Img.getR(), Encabezado_Img.getG(), Encabezado_Img.getB());
+
+            BufferedImage Imagen_Decodificada = new BufferedImage(Encabezado_Img.getAncho(), Encabezado_Img.getAlto(), BufferedImage.TYPE_BYTE_BINARY, Icm_Imagen);
             int j = 0;
-
-            IndexColorModel aux = new IndexColorModel(encabezado.getPixels(), encabezado.getSizemap(), encabezado.getR(), encabezado.getG(), encabezado.getB());
-
-            BufferedImage decode = new BufferedImage(encabezado.getAncho(), encabezado.getAlto(), BufferedImage.TYPE_BYTE_BINARY, aux);
-
-            for (int x = 0; x < encabezado.getAncho(); x++) {
-                for (int y = 0; y < encabezado.getAlto(); y++) {
-                    Color rgb = new Color(simbolosdecode[j], simbolosdecode[j], simbolosdecode[j]);
-                    decode.setRGB(x, y, rgb.getRGB());
+            for (int x = 0; x < Encabezado_Img.getAncho(); x++) {
+                for (int y = 0; y < Encabezado_Img.getAlto(); y++) {
+                    Color rgb = new Color(Simbolos_Decodificados[j], Simbolos_Decodificados[j], Simbolos_Decodificados[j]);
+                    Imagen_Decodificada.setRGB(x, y, rgb.getRGB());
                     j++;
                 }
 
@@ -476,12 +417,12 @@ public class TrabajoEspecial {
 
 
             try {
-                File outFile = new File(System.getProperty("user.dir") + "/" + "Descompress" + ".bmp");
+                File outFile = new File(System.getProperty("user.dir") + "/resultados/" + nombreArchivo + ".bmp");
                 if (outFile.exists()) {
                     outFile.delete();
                     outFile.createNewFile();
                 }
-                ImageIO.write(decode, "BMP", outFile);
+                ImageIO.write(Imagen_Decodificada, "BMP", outFile);
 
             } catch (Exception e) {
                 System.out.println(e);

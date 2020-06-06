@@ -42,7 +42,7 @@ class Histograma {
         }
         final XYSeriesCollection dataset = new XYSeriesCollection(set);
 
-        JFreeChart chart = ChartFactory.createXYBarChart("Histograma: " + this.titulo, "Escala de grises",false, "Probabilidad", dataset, PlotOrientation.VERTICAL, true, true, false);
+        JFreeChart chart = ChartFactory.createXYBarChart("" + this.titulo, "Escala de grises",false, "Frecuencias", dataset, PlotOrientation.VERTICAL, true, true, false);
 
 
         XYPlot plot = (XYPlot) chart.getPlot();
@@ -73,7 +73,7 @@ class Histograma {
 
         try {
             BufferedImage outHistograma = chart.createBufferedImage(800, 800);
-            File outFile = new File(System.getProperty("user.dir") + "/" + this.titulo + ".png");
+            File outFile = new File(System.getProperty("user.dir") + "/resultados/" + this.titulo + ".png");
             if (outFile.exists()) {
                 outFile.delete();
                 outFile.createNewFile();

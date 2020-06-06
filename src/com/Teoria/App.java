@@ -1,11 +1,9 @@
 package com.Teoria;
 
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 
 public class App {
     private JPanel panel1;
@@ -24,7 +22,7 @@ public class App {
             @Override
 
             public void actionPerformed(ActionEvent e) {
-                tp.Calcular_CoefCorrelacion();
+                tp.Ejercicio1();
 
             }
         });
@@ -32,7 +30,7 @@ public class App {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    tp.ej2();
+                    //tp.Ejercicio2();
                 }
                 catch(Exception error){
                     JOptionPane.showMessageDialog(null,"Debe ejecutar el factor de correlacion primero, asi decidir que imagen es mas parecida");

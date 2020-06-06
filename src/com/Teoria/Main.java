@@ -1,5 +1,7 @@
 package com.Teoria;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.Vector;
 
 public class Main {
@@ -7,39 +9,43 @@ public class Main {
     public static void main(String[] args) {
 
 
+
+
+
         TrabajoEspecial tp = new TrabajoEspecial();
-        Vector<Tupla> r = tp.Calcular_CoefCorrelacion();
-        tp.ej2();
+        tp.Ejercicio1();
+        float[] distribucionImagenOriginal = new float[256];
+        float[] distribucionImagenPolicia = new float[256];
+        float[] distribucionImagenEj1 = new float[256];
 
-        byte[] compress = tp.compresor();
+        int[] frecuenciasImagenOriginal = new int[256];
+        int[] frecuenciasImagenPolicia = new int[256];
+        int[] frecuenciasImagenEj1 = new int[256];
 
-        tp.descompresor();
-        /*
-        for(int i =0;i< compress.length;i++){
-            System.out.println(compress[i]);
-        }*/
+        BufferedImage img = tp.getImg_Original();
 
-        /*
-        Vector<Tupla> r = tp.Calcular_CoefCorrelacion();
-        tp.ej2();
-        */
+        int m=0;
+        for (int x = 0; x < img.getWidth(); x++) {
+            for (int y = 0; y < img.getHeight(); y++) {
+                int rgb_ImgOriginal = img.getRGB(x, y);
 
+                Color color = new Color(rgb_ImgOriginal, true);
 
-    /*
-        Vector<Tupla> r = tp.Calcular_CoefCorrelacion();
-        System.out.println("r["+ r.elementAt(0).getNombre() +"]: " + r.elementAt(0).getFactor() + "");
-        System.out.println("r["+ r.elementAt(1).getNombre() +"]: " + r.elementAt(1).getFactor() + "");
-        System.out.println("r["+ r.elementAt(2).getNombre() +"]: " + r.elementAt(2).getFactor() + "");
-        System.out.println("r["+ r.elementAt(3).getNombre() +"]: " + r.elementAt(3).getFactor() + "");
-        System.out.println("r["+ r.elementAt(4).getNombre() +"]: " + r.elementAt(4).getFactor() + "");
-    */
-    /*
-        float[] ej2a = new float[] {0.385f, 0.154f, 0.128f, 0.154f, 0.179f};
-        Huffman prueba = new Huffman();
-        String[] code = prueba.do_Huffman(ej2a);
+                rgb_ImgOriginal = color.getRed();
 
-        for (int i = 0; i < code.length; i++)
-            System.out.println(" S "+i+" = "+code[i]+"");
-    */
+                frecuenciasImagenOriginal[rgb_ImgOriginal]++;
+                m++;
+            }
+        }
+        for (int i = 0; i < distribucionImagenOriginal.length; i++) {
+            distribucionImagenOriginal[i] = (float) frecuenciasImagenOriginal[i] / m;
+        }
+
+        tp.Ejercicio2();
+
+        tp.Compresor(distribucionImagenOriginal,frecuenciasImagenOriginal,img,"ImagenOriginalComprimida");
+
+        tp.Descompresor("ImagenOriginalDescomprimida","ImagenOriginalComprimida");
+
     }
 }
