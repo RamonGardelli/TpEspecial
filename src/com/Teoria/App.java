@@ -4,25 +4,49 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.nio.file.NoSuchFileException;
 
 public class App {
     private JPanel panel1;
     private JLabel textup;
     private JButton factorDeAutocorrelacionButton;
     private JButton distribucionMediaYDesvioButton;
-    private JButton button3;
-    private JButton button4;
-    private JButton comprimirButton;
-    private JButton descomprimirButton;
+    private JButton matricesDeTransicionButton;
+    private JButton graficosDeErrorYButton;
+    private JButton compresionButton;
+    private JButton descompresorButton;
     private JLabel textend;
 
+
+    //Defino unica instancia.
+    TrabajoEspecial tpe = new TrabajoEspecial();
+
+    //Obtengo imagenes relevantes junto a sus distribuciones y frecuencias.
+    BufferedImage Img_Original = tpe.getImg_Original();
+    BufferedImage Img_Policia = tpe.getImg_Policia();
+    BufferedImage Img_MasParecida;
+
+    float[] distribucionImagenOriginal;
+    float[] distribucionImagenPolicia;
+    float[] distribucionImagenMasParecida;
+
+    int[] frecuenciasImagenOriginal;
+    int[] frecuenciasImagenPolicia;
+    int[] frecuenciasImagenMasParecida;
+    //
+
+
     public App() {
-        TrabajoEspecial tp = new TrabajoEspecial();
         factorDeAutocorrelacionButton.addActionListener(new ActionListener() {
             @Override
 
             public void actionPerformed(ActionEvent e) {
-                tp.Ejercicio1();
+                tpe.Ejercicio1();
+                JOptionPane.showMessageDialog(null,"Los resultados pueden ser visualizados en la carpeta Resultados.");
+
+                Img_MasParecida = tpe.getimagenEjercicio1();
 
             }
         });
@@ -30,12 +54,65 @@ public class App {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    //tp.Ejercicio2();
+                    tpe.Ejercicio2();
+                    JOptionPane.showMessageDialog(null,"Los resultados pueden ser visualizados en la carpeta Resultados.");
+
+                    distribucionImagenOriginal = tpe.getDistribucionImagenOriginal();
+                    distribucionImagenPolicia = tpe.getDistribucionImagenPolicia();
+                    distribucionImagenMasParecida = tpe.getDistribucionImagenEj1();
+
+                    frecuenciasImagenOriginal = tpe.getFrecuenciasImagenOriginal();
+                    frecuenciasImagenPolicia = tpe.getFrecuenciasImagenPolicia();
+                    frecuenciasImagenMasParecida = tpe.getFrecuenciasImagenEj1();
                 }
                 catch(Exception error){
-                    JOptionPane.showMessageDialog(null,"Debe ejecutar el factor de correlacion primero, asi decidir que imagen es mas parecida");
+                    JOptionPane.showMessageDialog(null,"Debe ejecutar el factor de correlacion primero, asi decidir que imagen es mas parecida.");
                 }
 
+            }
+        });
+        compresionButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    //a)
+                    tpe.Compresor(distribucionImagenOriginal, frecuenciasImagenOriginal, Img_Original, "ImagenOriginalComprimida");
+                    //b)
+                    tpe.Compresor(distribucionImagenOriginal, frecuenciasImagenOriginal, Img_MasParecida, "ImagenMasParecidaComprimidaConOriginal");
+                    //c)
+                    tpe.Compresor(distribucionImagenOriginal, frecuenciasImagenOriginal, Img_Policia, "ImagenPoliciaComprimidaConOriginal");
+                    //d)
+                    tpe.Compresor(distribucionImagenPolicia, frecuenciasImagenPolicia, Img_Policia, "ImagenPoliciaComprimida");
+
+                    JOptionPane.showMessageDialog(null, "Compresion exitosa!.");
+                }
+                catch (Exception error){
+                    JOptionPane.showMessageDialog(null, "Es necesario ejecutar el Ejercicio 2 para obtener las distribuciones de las imagenes.");
+
+                }
+
+            }
+        });
+        descompresorButton.addActionListener(new ActionListener() {
+            @Override
+
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    //de a)
+                    tpe.Descompresor("ImagenOriginalDescomprimida", "ImagenOriginalComprimida");
+                    //de b)
+                    tpe.Descompresor("ImagenMasParecida(CodifImagenOriginal)Descomprimida", "ImagenMasParecidaComprimidaConOriginal");
+                    //de c)
+                    tpe.Descompresor("ImagenPolicia(CodifImagenOriginal)Descomprimida", "ImagenPoliciaComprimidaConOriginal");
+                    //de d)
+                    tpe.Descompresor("ImagenPoliciaDescomprimida", "ImagenPoliciaComprimida");
+
+                    JOptionPane.showMessageDialog(null,"Descompresion exitosa! la imagen puede encontrarse en la carpeta Resultados");
+
+                }
+                catch(IOException exec){
+                    JOptionPane.showMessageDialog(null,"No hay compresiones para descomprimir.");
+                }
             }
         });
     }

@@ -4,10 +4,14 @@ package com.Teoria;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
 import java.awt.image.IndexColorModel;
+import java.awt.image.WritableRaster;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Vector;
 
@@ -22,17 +26,58 @@ public class TrabajoEspecial {
     private BufferedImage Img_Policia;
 
     private BufferedImage imagenEjercicio1;
-/*
+
     private float[] distribucionImagenOriginal;
     private float[] distribucionImagenPolicia;
     private float[] distribucionImagenEj1;
 
     private int[] frecuenciasImagenOriginal;
     private int[] frecuenciasImagenPolicia;
-    private int[] frecuenciasImagenEj1;*/
+    private int[] frecuenciasImagenEj1;
 
     public BufferedImage getImg_Original() {
-        return Img_Original;
+        ColorModel cm = Img_Original.getColorModel();
+        boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+        WritableRaster raster = Img_Original.copyData(null);
+        return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
+    }
+
+    public BufferedImage getImg_Policia() {
+        ColorModel cm = Img_Policia.getColorModel();
+        boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+        WritableRaster raster = Img_Policia.copyData(null);
+        return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
+    }
+
+    public BufferedImage getimagenEjercicio1() {
+        ColorModel cm = imagenEjercicio1.getColorModel();
+        boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+        WritableRaster raster = imagenEjercicio1.copyData(null);
+        return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
+    }
+
+    public float[] getDistribucionImagenOriginal() {
+        return Arrays.copyOf(distribucionImagenOriginal, distribucionImagenOriginal.length);
+    }
+
+    public float[] getDistribucionImagenPolicia() {
+        return Arrays.copyOf(distribucionImagenPolicia, distribucionImagenPolicia.length);
+    }
+
+    public float[] getDistribucionImagenEj1() {
+        return Arrays.copyOf(distribucionImagenEj1, distribucionImagenEj1.length);
+    }
+
+    public int[] getFrecuenciasImagenOriginal() {
+        return Arrays.copyOf(frecuenciasImagenOriginal, frecuenciasImagenOriginal.length);
+    }
+
+    public int[] getFrecuenciasImagenPolicia() {
+        return Arrays.copyOf(frecuenciasImagenPolicia, frecuenciasImagenPolicia.length);
+    }
+
+    public int[] getFrecuenciasImagenEj1() {
+        return Arrays.copyOf(frecuenciasImagenEj1, frecuenciasImagenEj1.length);
     }
 
     public TrabajoEspecial() {
@@ -213,14 +258,14 @@ public class TrabajoEspecial {
             probabilidad_ImgPolicia[i] = (float) exitos_ImgPolicia[i] / m;
 
         }
-        /*
+
         //distribuciones y frecuencias de las imagenes/////////////////////////////////////
         distribucionImagenOriginal = probabilidad_ImgOriginal;
         distribucionImagenPolicia = probabilidad_ImgPolicia;
         distribucionImagenEj1 = probabilidad_ImgEj1;
         frecuenciasImagenOriginal = exitos_ImgOriginal;
         frecuenciasImagenPolicia = exitos_ImgPolicia;
-        frecuenciasImagenEj1 = exitos_ImgEj1;*/
+        frecuenciasImagenEj1 = exitos_ImgEj1;
 
         //////////////////////////////
         Histograma hist_ImgOriginal = new Histograma(exitos_ImgOriginal, "Histograma de Imagen original");
@@ -339,7 +384,7 @@ public class TrabajoEspecial {
     }
 
 
-    public void Descompresor(String nombreArchivo, String archivoComprimido) {
+    public void Descompresor(String nombreArchivo, String archivoComprimido) throws IOException {
 
         try {
             byte[] Mensaje_Decodificado = Files.readAllBytes(new File("resultados\\" + archivoComprimido + ".bin").toPath());
@@ -424,16 +469,14 @@ public class TrabajoEspecial {
                 }
                 ImageIO.write(Imagen_Decodificada, "BMP", outFile);
 
+
             } catch (Exception e) {
-                System.out.println(e);
+
             }
-
-
-        } catch (Exception e) {
-            System.out.println(e);
-
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
+
+
     }
-
-
 }

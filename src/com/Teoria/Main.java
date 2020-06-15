@@ -1,51 +1,38 @@
 package com.Teoria;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.util.Vector;
-
 public class Main {
 
     public static void main(String[] args) {
 
+        //MIGRADO A INTERFAZ.. APP
+        /*
+        //Defino unica instancia.
+        TrabajoEspecial tpe = new TrabajoEspecial();
 
+        //Es necesario correr el ejercicio 1 para saber cual es la img mas parecida y ya tener toda la info
+        tpe.Ejercicio1();
 
+        //Obtengo imagenes relevantes junto a sus distribuciones y frecuencias.
+        BufferedImage Img_Original = tpe.getImg_Original();
+        BufferedImage Img_Policia = tpe.getImg_Policia();
+        BufferedImage Img_MasParecida = tpe.getimagenEjercicio1();
 
+        float[] distribucionImagenOriginal = tpe.getDistribucionImagenOriginal();
+        float[] distribucionImagenPolicia = tpe.getDistribucionImagenPolicia();
+        float[] distribucionImagenMasParecida = tpe.getDistribucionImagenEj1();
 
-        TrabajoEspecial tp = new TrabajoEspecial();
-        tp.Ejercicio1();
-        float[] distribucionImagenOriginal = new float[256];
-        float[] distribucionImagenPolicia = new float[256];
-        float[] distribucionImagenEj1 = new float[256];
+        int[] frecuenciasImagenOriginal = tpe.getFrecuenciasImagenOriginal();
+        int[] frecuenciasImagenPolicia = tpe.getFrecuenciasImagenPolicia();
+        int[] frecuenciasImagenMasParecida = tpe.getFrecuenciasImagenEj1();
+        //
 
-        int[] frecuenciasImagenOriginal = new int[256];
-        int[] frecuenciasImagenPolicia = new int[256];
-        int[] frecuenciasImagenEj1 = new int[256];
+        //Ejercicio
 
-        BufferedImage img = tp.getImg_Original();
+        tpe.Ejercicio2();
 
-        int m=0;
-        for (int x = 0; x < img.getWidth(); x++) {
-            for (int y = 0; y < img.getHeight(); y++) {
-                int rgb_ImgOriginal = img.getRGB(x, y);
+        tpe.Compresor(distribucionImagenOriginal,frecuenciasImagenOriginal,Img_Original,"ImagenOriginalComprimida");
 
-                Color color = new Color(rgb_ImgOriginal, true);
-
-                rgb_ImgOriginal = color.getRed();
-
-                frecuenciasImagenOriginal[rgb_ImgOriginal]++;
-                m++;
-            }
-        }
-        for (int i = 0; i < distribucionImagenOriginal.length; i++) {
-            distribucionImagenOriginal[i] = (float) frecuenciasImagenOriginal[i] / m;
-        }
-
-        tp.Ejercicio2();
-
-        tp.Compresor(distribucionImagenOriginal,frecuenciasImagenOriginal,img,"ImagenOriginalComprimida");
-
-        tp.Descompresor("ImagenOriginalDescomprimida","ImagenOriginalComprimida");
-
+        tpe.Descompresor("ImagenOriginalDescomprimida","ImagenOriginalComprimida");
+        */
     }
 }
