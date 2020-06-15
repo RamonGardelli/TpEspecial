@@ -3,9 +3,10 @@
     <output-path>$PROJECT_DIR$/out/artifacts/TpEspecial_jar</output-path>
     <root id="archive" name="TpEspecial.jar">
       <element id="module-output" name="TpEspecial" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/jfreechart-1.0.19.jar" path-in-jar="/" />
-      <element id="library" level="project" name="jfreechart-1.0" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/jcommon-1.0.23.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/jcommon-1.0.23.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/jfreechart-1.0.19.jar" path-in-jar="/" />
+      <element id="library" level="project" name="jcommon-1.0.23" />
+      <element id="library" level="project" name="jfreechart-1.0.19" />
     </root>
   </artifact>
 </component>
