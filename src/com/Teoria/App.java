@@ -23,26 +23,32 @@ public class App {
     TrabajoEspecial tpe = new TrabajoEspecial();
 
     //Obtengo imagenes relevantes junto a sus distribuciones y frecuencias.
-    BufferedImage Img_Original = tpe.getImg_Original();
-    BufferedImage Img_Policia = tpe.getImg_Policia();
-    BufferedImage Img_Canal2 = tpe.getImg_Canal2();
-    BufferedImage Img_Canal8 = tpe.getImg_Canal8();
-    BufferedImage Img_Canal10 = tpe.getImg_Canal10();
-    BufferedImage Img_MasParecida;
+    private BufferedImage Img_Original = tpe.getImg_Original();
+    private BufferedImage Img_Policia = tpe.getImg_Policia();
+    private BufferedImage Img_Canal2 = tpe.getImg_Canal2();
+    private BufferedImage Img_Canal8 = tpe.getImg_Canal8();
+    private BufferedImage Img_Canal10 = tpe.getImg_Canal10();
+    private BufferedImage Img_MasParecida;
 
-    float[] distribucionImagenOriginal;
-    float[] distribucionImagenPolicia;
-    float[] distribucionImagenMasParecida;
+    private float[] distribucionImagenOriginal;
+    private float[] distribucionImagenPolicia;
+    private float[] distribucionImagenMasParecida;
 
-    int[] frecuenciasImagenOriginal;
-    int[] frecuenciasImagenPolicia;
-    int[] frecuenciasImagenMasParecida;
+    private int[] frecuenciasImagenOriginal;
+    private int[] frecuenciasImagenPolicia;
+    private int[] frecuenciasImagenMasParecida;
     //
 
     //Matrices de transicion
-    float[][] mat_Transicion_Canal2;
-    float[][] mat_Transicion_Canal8;
-    float[][] mat_Transicion_Canal10;
+    private float[][] mat_Transicion_Canal2;
+    private float[][] mat_Transicion_Canal8;
+    private float[][] mat_Transicion_Canal10;
+
+    //Ruidos EJ4
+    private float ruido_Canal2;
+    private float ruido_Canal8;
+    private float ruido_Canal10;
+
 
     public App() {
         factorDeAutocorrelacionButton.addActionListener(new ActionListener() {
@@ -127,10 +133,13 @@ public class App {
                 try{
                     tpe.CalcularMatrizTransicion(Img_Canal2,"Matriz Transicion Canal2");
                     mat_Transicion_Canal2 = tpe.getMat_Transicion_Ejercicio4();
+                    ruido_Canal2 = tpe.getRuido_Ejercicio4();
                     tpe.CalcularMatrizTransicion(Img_Canal8,"Matriz Transicion Canal8");
                     mat_Transicion_Canal8 = tpe.getMat_Transicion_Ejercicio4();
+                    ruido_Canal8 = tpe.getRuido_Ejercicio4();
                     tpe.CalcularMatrizTransicion(Img_Canal10,"Matriz Transicion Canal10");
                     mat_Transicion_Canal10 = tpe.getMat_Transicion_Ejercicio4();
+                    ruido_Canal10 = tpe.getRuido_Ejercicio4();
                     JOptionPane.showMessageDialog(null,"Las matrices pueden visualizarse en la carpeta de Resultados.");
 
                 }
@@ -143,10 +152,17 @@ public class App {
         graficosDeErrorYButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                tpe.CalcularRuido_Muestreo(mat_Transicion_Canal2,"hola",0.0001f,50000);
-                tpe.CalcularRuido_Muestreo(mat_Transicion_Canal8,"hola",0.0001f,50000);
-                tpe.CalcularRuido_Muestreo(mat_Transicion_Canal10,"hola",0.0001f,50000);
+                try {
+                    tpe.CalcularRuido_Muestreo(mat_Transicion_Canal2, "Error del Ruido Canal 2", ruido_Canal2, 0.001f, 4900);
+                    tpe.CalcularRuido_Muestreo(mat_Transicion_Canal8, "Error del Ruido Canal 8", ruido_Canal8, 0.001f, 4900);
+                    tpe.CalcularRuido_Muestreo(mat_Transicion_Canal10, "Error del Ruido Canal 10", ruido_Canal10, 0.001f, 4900);
+                    JOptionPane.showMessageDialog(null,"Los resultados pueden ser visualizados en la carpeta Resultados.");
 
+                }
+                catch (Exception error){
+                    JOptionPane.showMessageDialog(null,"Debe ejecutarse el ejercicio 3 asi obtener el ruido analitico y poder comparar. ");
+
+                }
             }
         });
     }

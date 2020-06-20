@@ -39,8 +39,13 @@ public class TrabajoEspecial {
     private int[] frecuenciasImagenPolicia;
     private int[] frecuenciasImagenEj1;
 
-    float[][] mat_Transicion_Ejercicio4;
+    private float[][] mat_Transicion_Ejercicio4;
 
+    private float ruido_Ejercicio4;
+
+    public float getRuido_Ejercicio4() {
+        return ruido_Ejercicio4;
+    }
 
     public BufferedImage getImg_Canal2() {
         ColorModel cm = Img_Canal2.getColorModel();
@@ -558,22 +563,10 @@ public class TrabajoEspecial {
             }
         }
 
-
-        ///ESTO VA EN UN METODO NUEVO
         float[] probabilidades_SinCeros = helper_Canales.arrayHelperProbabilidad(distribucionImagenOriginal);
 
-        float entropia = 0;
-        for (int col = 0; col < 16; col++) {
-            float entrCol = 0;
-            for (int fila = 0; fila < 16; fila++) {
-                float valor = mat_Transicion[fila][col];
-                if (valor > 0)
-                    entrCol -= valor * (float) (Math.log(valor) / Math.log(2));
-            }
-            entropia += entrCol * probabilidades_SinCeros[col];
-        }
-        System.out.println("ruido analitico :" + entropia);
-///*//////////////////////////////
+        this.ruido_Ejercicio4 = this.CalcularRuido_Analitico(probabilidades_SinCeros,mat_Transicion);
+
         this.mat_Transicion_Ejercicio4 = mat_Transicion;
 
         String mat_Transicion_Retornada = "";
@@ -604,6 +597,22 @@ public class TrabajoEspecial {
 
     }
 
+
+    public float CalcularRuido_Analitico(float[] probabilidades,float[][] mat_Transicion){
+
+        float Entropia=0f;
+        for (int i = 0; i <mat_Transicion[0].length ; i++) {
+            float Entropia_Columna=0f;
+            for (int j = 0; j < mat_Transicion.length; j++) {
+                if(mat_Transicion[j][i] != 0)
+                    Entropia_Columna -= mat_Transicion[j][i] * (float) (Math.log(mat_Transicion[j][i]) / Math.log(2));
+            }
+            Entropia += probabilidades[i] * Entropia_Columna;
+        }
+        return Entropia;
+    }
+
+
     public int Simular_Entrada(float[] probabilidades) {
 
         float p = (float) Math.random();
@@ -625,7 +634,7 @@ public class TrabajoEspecial {
         return -1;
     }
 
-    public float CalcularRuido_Muestreo(float[][] mat_Transicion, String nombreArchivo, float Epsilon, int MIN_MUESTRAS) {
+    public void CalcularRuido_Muestreo(float[][] mat_Transicion, String nombreArchivo,float ruido_Analitico, float Epsilon, int MIN_MUESTRAS) {
 
         Helper helper_Ruido = new Helper();
         int Muestras = 0;
@@ -687,8 +696,27 @@ public class TrabajoEspecial {
             }
 
         }
-        System.out.println("ruido muestreo: " +ruido_Act);
-        return ruido_Act;
+
+        try {
+            File outFile = new File(System.getProperty("user.dir") + "/resultados/" + nombreArchivo + ".txt");
+            if (outFile.exists()) {
+                outFile.delete();
+                outFile.createNewFile();
+            }
+            FileWriter writer = new FileWriter(outFile);
+
+            writer.write("Ruido del canal calculado analiticamente: " + ruido_Analitico +"\n");
+            writer.write("Ruido del canal calculado por muestreo: " + ruido_Act +"\n");
+            writer.write("Epsilon utilizado: " + Epsilon +"\n");
+            writer.write("Muestras necesarias para convergencia: " + Muestras +"\n");
+            writer.write("Error del Ruido: " + (ruido_Analitico -ruido_Act) +"\n");
+
+            writer.close();
+
+
+        } catch (Exception e) {
+        }
+
     }
 
     private boolean Converge(float a, float b, float Epsilon) {
