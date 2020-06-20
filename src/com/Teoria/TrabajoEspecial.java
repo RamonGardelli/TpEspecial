@@ -222,7 +222,11 @@ public class TrabajoEspecial {
             this.imagenEjercicio1 = this.Img_5;
 
         try {
-            File outFile = new File(System.getProperty("user.dir") + "/resultados/" + "Factores de correlacion Ejercicio 1" + ".txt");
+            File directorio = new File( System.getProperty("user.dir")+"/resultados/Ejercicio1/");
+            if(!directorio.exists()) {
+                directorio.mkdir();
+            }
+            File outFile = new File(System.getProperty("user.dir") + "/resultados/Ejercicio1/" + "Factores de correlacion Ejercicio 1" + ".txt");
             if (outFile.exists()) {
                 outFile.delete();
                 outFile.createNewFile();
@@ -242,6 +246,7 @@ public class TrabajoEspecial {
 
 
     public void Ejercicio2() {
+
 
         float[] probabilidad_ImgOriginal = new float[256];
         float[] probabilidad_ImgEj1 = new float[256];
@@ -313,24 +318,38 @@ public class TrabajoEspecial {
         frecuenciasImagenEj1 = exitos_ImgEj1;
 
         //////////////////////////////
+
+        String text_ImgOriginal = "Imagen Original - Media: " + media_ImgOriginal.get_Media() + "  Desvio Estandar: " + De_ImgOriginal.get_Desvio_Estandar();
+
+        String text_ImgMasParecida ="Imagen mas parecida  - Media : " + media_ImgEj1.get_Media() + "  Desvio Estandar: " + De_ImgEj1.get_Desvio_Estandar();
+
+        String text_ImgPolicia = "Imagen del Policia - Media: " + media_ImgPolicia.get_Media() + "  Desvio Estandar: " + De_ImgPolicia.get_Desvio_Estandar();
+
+
         Histograma hist_ImgOriginal = new Histograma(exitos_ImgOriginal, "Histograma de Imagen original");
         Histograma hist_ImgPolicia = new Histograma(exitos_ImgPolicia, "Histograma de Imagen del Policia");
         Histograma hist_ImgEj1 = new Histograma(exitos_ImgEj1, "Histograma Imagen mas parecida");
-        hist_ImgOriginal.Ver_Histograma();
-        hist_ImgPolicia.Ver_Histograma();
-        hist_ImgEj1.Ver_Histograma();
+        hist_ImgOriginal.Ver_Histograma(text_ImgOriginal);
+        hist_ImgPolicia.Ver_Histograma(text_ImgPolicia);
+        hist_ImgEj1.Ver_Histograma(text_ImgMasParecida);
+
+
 
 
         try {
-            File outFile = new File(System.getProperty("user.dir") + "/resultados/" + "Desvios y Medias Ejercicio 2" + ".txt");
+            File directorio = new File( System.getProperty("user.dir")+"/resultados/Ejercicio2/");
+            if(!directorio.exists()) {
+                directorio.mkdir();
+            }
+            File outFile = new File(System.getProperty("user.dir") + "/resultados/Ejercicio2/" + "Desvios y Medias Ejercicio 2" + ".txt");
             if (outFile.exists()) {
                 outFile.delete();
                 outFile.createNewFile();
             }
             FileWriter writer = new FileWriter(outFile);
-            writer.write("Imagen Original - Media: " + media_ImgOriginal.get_Media() + "  Desvio Estandar: " + De_ImgOriginal.get_Desvio_Estandar() + "\n");
-            writer.write("Imagen mas parecida  - Media : " + media_ImgEj1.get_Media() + "  Desvio Estandar: " + De_ImgEj1.get_Desvio_Estandar() + "\n");
-            writer.write("Imagen del Policia - Media: " + media_ImgPolicia.get_Media() + "  Desvio Estandar: " + De_ImgPolicia.get_Desvio_Estandar() + "\n");
+            writer.write(text_ImgOriginal + "\n");
+            writer.write(text_ImgMasParecida + "\n");
+            writer.write(text_ImgPolicia + "\n");
             writer.close();
 
         } catch (Exception e) {
@@ -379,11 +398,16 @@ public class TrabajoEspecial {
             Mensaje_en_Bytes[i] = Mensaje_Comprimido.get(i);
 
         try {
-            File outFile = new File(System.getProperty("user.dir") + "/resultados/" + nombreArchivo + ".bin");
+            File directorio = new File( System.getProperty("user.dir")+"/resultados/Ejercicio3/");
+            if(!directorio.exists()) {
+                directorio.mkdir();
+            }
+            File outFile = new File(System.getProperty("user.dir") + "/resultados/Ejercicio3/" + nombreArchivo + ".bin");
             if (outFile.exists()) {
                 outFile.delete();
                 outFile.createNewFile();
             }
+
             FileOutputStream out = new FileOutputStream(outFile);
             DataOutputStream writer = new DataOutputStream(out);
 
@@ -432,7 +456,7 @@ public class TrabajoEspecial {
     public void Descompresor(String nombreArchivo, String archivoComprimido) throws IOException {
 
         try {
-            byte[] Mensaje_Decodificado = Files.readAllBytes(new File("resultados\\" + archivoComprimido + ".bin").toPath());
+            byte[] Mensaje_Decodificado = Files.readAllBytes(new File("resultados\\Ejercicio3\\" + archivoComprimido + ".bin").toPath());
             int Dim_Encabezado = ByteBuffer.wrap(Mensaje_Decodificado, 0, 4).getInt();
             byte[] Encabezado_Decodificado = new byte[Dim_Encabezado];
             for (int i = 0; i < Dim_Encabezado; i++) {
@@ -507,7 +531,12 @@ public class TrabajoEspecial {
 
 
             try {
-                File outFile = new File(System.getProperty("user.dir") + "/resultados/" + nombreArchivo + ".bmp");
+                File directorio = new File( System.getProperty("user.dir")+"/resultados/Ejercicio3/");
+                if(!directorio.exists()) {
+                    directorio.mkdir();
+                }
+                File outFile = new File(System.getProperty("user.dir") + "/resultados/Ejercicio3/" + nombreArchivo + ".bmp");
+                boolean dirCreated = outFile.mkdir();
                 if (outFile.exists()) {
                     outFile.delete();
                     outFile.createNewFile();
@@ -580,7 +609,11 @@ public class TrabajoEspecial {
 
 
         try {
-            File outFile = new File(System.getProperty("user.dir") + "/resultados/" + nombreArchivo + ".txt");
+            File directorio = new File( System.getProperty("user.dir")+"/resultados/Ejercicio4/");
+            if(!directorio.exists()) {
+                directorio.mkdir();
+            }
+            File outFile = new File(System.getProperty("user.dir") + "/resultados/Ejercicio4/" + nombreArchivo + ".txt");
             if (outFile.exists()) {
                 outFile.delete();
                 outFile.createNewFile();
@@ -705,7 +738,11 @@ public class TrabajoEspecial {
         hist_Ruido.Ver_GraficoError(errores);
 
         try {
-            File outFile = new File(System.getProperty("user.dir") + "/resultados/" + nombreArchivo + ".txt");
+            File directorio = new File( System.getProperty("user.dir")+"/resultados/Ejercicio4/");
+            if(!directorio.exists()) {
+                directorio.mkdir();
+            }
+            File outFile = new File(System.getProperty("user.dir") + "/resultados/Ejercicio4/" + nombreArchivo + ".txt");
             if (outFile.exists()) {
                 outFile.delete();
                 outFile.createNewFile();

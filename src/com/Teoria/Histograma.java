@@ -60,9 +60,13 @@ class Histograma {
         range.setVisible(false);
 
         try {
+            File directorio = new File( System.getProperty("user.dir")+"/resultados/Ejercicio4/");
+            if(!directorio.exists()) {
+                directorio.mkdir();
+            }
             BufferedImage outHistograma = grafico.createBufferedImage(800, 800);
             String subtitulo = this.titulo.substring(16,this.titulo.length());
-            File outFile = new File(System.getProperty("user.dir") + "/resultados/" + "Grafico de convergencia "+ subtitulo + ".png");
+            File outFile = new File(System.getProperty("user.dir") + "/resultados/Ejercicio4/" + "Grafico de convergencia "+ subtitulo + ".png");
             if (outFile.exists()) {
                 outFile.delete();
                 outFile.createNewFile();
@@ -76,13 +80,13 @@ class Histograma {
 
 
 
-    public void Ver_Histograma() {
-        this.Crear_Histograma();
+    public void Ver_Histograma(String texto) {
+        this.Crear_Histograma(texto);
     }
 
-    private void Crear_Histograma() {
+    private void Crear_Histograma(String texto) {
 
-        XYSeries set = new XYSeries("#Pixeles");
+        XYSeries set = new XYSeries(texto);
 
         for (int i = 0; i < this.vectorhistograma.length; i++) {
                 set.add(i,this.vectorhistograma[i]);
@@ -120,8 +124,12 @@ class Histograma {
         panel.setVisible(true);
 
         try {
+            File directorio = new File( System.getProperty("user.dir")+"/resultados/Ejercicio2/");
+            if(!directorio.exists()) {
+                directorio.mkdir();
+            }
             BufferedImage outHistograma = chart.createBufferedImage(800, 800);
-            File outFile = new File(System.getProperty("user.dir") + "/resultados/" + this.titulo + ".png");
+            File outFile = new File(System.getProperty("user.dir") + "/resultados/Ejercicio2/" + this.titulo + ".png");
             if (outFile.exists()) {
                 outFile.delete();
                 outFile.createNewFile();
