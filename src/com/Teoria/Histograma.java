@@ -58,8 +58,6 @@ class Histograma {
         JFrame main = new JFrame("Histograma");
         main.setLayout(new BorderLayout(4, 4));
         main.setVisible(true);
-        main.setLocationRelativeTo(null);
-
         main.setSize(1300, 700);
 
         JPanel panel = new JPanel();

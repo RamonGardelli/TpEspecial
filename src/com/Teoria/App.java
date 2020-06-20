@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
+import java.awt.event.InputMethodListener;import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 public class App {
@@ -153,9 +153,11 @@ public class App {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    tpe.CalcularRuido_Muestreo(mat_Transicion_Canal2, "Error del Ruido Canal 2", ruido_Canal2, 0.001f, 4900);
-                    tpe.CalcularRuido_Muestreo(mat_Transicion_Canal8, "Error del Ruido Canal 8", ruido_Canal8, 0.001f, 4900);
-                    tpe.CalcularRuido_Muestreo(mat_Transicion_Canal10, "Error del Ruido Canal 10", ruido_Canal10, 0.001f, 4900);
+                    String Epsilon = JOptionPane.showInputDialog("Ingrese Epsilon");
+                    String MIN_MUESTRAS = JOptionPane.showInputDialog("Ingrese minimo de muestras");
+                    tpe.CalcularRuido_Muestreo(mat_Transicion_Canal2, "Error del Ruido Canal 2" + " Epsilon=" + Epsilon + "MinMuestras="+ MIN_MUESTRAS, ruido_Canal2, Float.parseFloat(Epsilon), Integer.parseInt(MIN_MUESTRAS));
+                    tpe.CalcularRuido_Muestreo(mat_Transicion_Canal8, "Error del Ruido Canal 8"+ " Epsilon=" + Epsilon + "MinMuestras="+ MIN_MUESTRAS, ruido_Canal8, Float.parseFloat(Epsilon), Integer.parseInt(MIN_MUESTRAS));
+                    tpe.CalcularRuido_Muestreo(mat_Transicion_Canal10, "Error del Ruido Canal 10"+ " Epsilon=" + Epsilon + "MinMuestras="+MIN_MUESTRAS, ruido_Canal10, Float.parseFloat(Epsilon), Integer.parseInt(MIN_MUESTRAS));
                     JOptionPane.showMessageDialog(null,"Los resultados pueden ser visualizados en la carpeta Resultados.");
 
                 }
@@ -165,7 +167,7 @@ public class App {
                 }
             }
         });
-    }
+     ;}
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("Trabajo Especial Teoria de la Informacion");
