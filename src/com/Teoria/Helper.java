@@ -1,5 +1,8 @@
 package com.Teoria;
 
+import javafx.util.Pair;
+
+import java.util.HashMap;
 import java.util.Vector;
 
 public class Helper {
@@ -76,6 +79,57 @@ public class Helper {
 
         return retorno;
     }
+
+    public int[][] matHelperFrecuencia(int[][] matfrec){
+        Vector<Integer> posiciones = new Vector<>();
+
+        for(int i=0;i<matfrec.length;i++){
+            int j=0;
+            while(j<matfrec[0].length){
+                if(matfrec[i][j] != 0){
+                    posiciones.add(i);
+                    j=matfrec[0].length;
+                }
+                j++;
+            }
+        }
+
+        int[][] matRetorno = new int[posiciones.size()][matfrec[0].length];
+
+        for (int i = 0; i <posiciones.size() ; i++) {
+            for (int j = 0; j <matfrec[0].length ; j++) {
+                matRetorno[i][j] = matfrec[posiciones.elementAt(i)][j];
+            }
+        }
+
+        return matRetorno;
+    }
+
+    public float[][] calcular_MatrizAcumulada(float[][] mat_Transicion){
+
+        float[][] mat_Retornada = new float[mat_Transicion.length][mat_Transicion[0].length];
+        for (int i = 0; i < mat_Retornada[0].length; i++) {
+            float suma = 0;
+            for (int j = 0; j <mat_Retornada.length ; j++) {
+                mat_Retornada[j][i] = (suma + mat_Transicion[j][i]);
+                suma = mat_Transicion[j][i];
+            }
+        }
+        return mat_Retornada;
+    }
+
+    public float[] calcular_ProbabilidadesAcumuladas(float[] distribucion){
+        float[] array_Retornado = new float[distribucion.length];
+        float suma=0;
+        for (int i = 0; i < array_Retornado.length; i++) {
+            array_Retornado[i] = (suma + distribucion[i]);
+            suma = distribucion[i];
+        }
+        return array_Retornado;
+    }
+
+
+
 
 
 }

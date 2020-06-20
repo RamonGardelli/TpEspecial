@@ -25,6 +25,9 @@ public class App {
     //Obtengo imagenes relevantes junto a sus distribuciones y frecuencias.
     BufferedImage Img_Original = tpe.getImg_Original();
     BufferedImage Img_Policia = tpe.getImg_Policia();
+    BufferedImage Img_Canal2 = tpe.getImg_Canal2();
+    BufferedImage Img_Canal8 = tpe.getImg_Canal8();
+    BufferedImage Img_Canal10 = tpe.getImg_Canal10();
     BufferedImage Img_MasParecida;
 
     float[] distribucionImagenOriginal;
@@ -36,6 +39,10 @@ public class App {
     int[] frecuenciasImagenMasParecida;
     //
 
+    //Matrices de transicion
+    float[][] mat_Transicion_Canal2;
+    float[][] mat_Transicion_Canal8;
+    float[][] mat_Transicion_Canal10;
 
     public App() {
         factorDeAutocorrelacionButton.addActionListener(new ActionListener() {
@@ -98,13 +105,13 @@ public class App {
             public void actionPerformed(ActionEvent e) {
                 try {
                     //de a)
-                    tpe.Descompresor("ImagenOriginalDescomprimida", "ImagenOriginalComprimida");
+                    tpe.Descompresor("Imagen Original Descomprimida", "ImagenOriginalComprimida");
                     //de b)
-                    tpe.Descompresor("ImagenMasParecida(CodifImagenOriginal)Descomprimida", "ImagenMasParecidaComprimidaConOriginal");
+                    tpe.Descompresor("Imagen Mas Parecida (CodifImagenOriginal) Descomprimida", "ImagenMasParecidaComprimidaConOriginal");
                     //de c)
-                    tpe.Descompresor("ImagenPolicia(CodifImagenOriginal)Descomprimida", "ImagenPoliciaComprimidaConOriginal");
+                    tpe.Descompresor("ImagenPolicia (CodifImagenOriginal) Descomprimida", "ImagenPoliciaComprimidaConOriginal");
                     //de d)
-                    tpe.Descompresor("ImagenPoliciaDescomprimida", "ImagenPoliciaComprimida");
+                    tpe.Descompresor("Imagen Policia Descomprimida", "ImagenPoliciaComprimida");
 
                     JOptionPane.showMessageDialog(null,"Descompresion exitosa! la imagen puede encontrarse en la carpeta Resultados");
 
@@ -112,6 +119,31 @@ public class App {
                 catch(IOException exec){
                     JOptionPane.showMessageDialog(null,"No hay compresiones para descomprimir.");
                 }
+            }
+        });
+        matricesDeTransicionButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try{
+                    tpe.CalcularMatrizTransicion(Img_Canal2,"Matriz Transicion Canal2");
+                    mat_Transicion_Canal2 = tpe.getMat_Transicion_Ejercicio4();
+                    tpe.CalcularMatrizTransicion(Img_Canal8,"Matriz Transicion Canal8");
+                    mat_Transicion_Canal8 = tpe.getMat_Transicion_Ejercicio4();
+                    tpe.CalcularMatrizTransicion(Img_Canal10,"Matriz Transicion Canal10");
+                    mat_Transicion_Canal10 = tpe.getMat_Transicion_Ejercicio4();
+                    JOptionPane.showMessageDialog(null,"Las matrices pueden visualizarse en la carpeta de Resultados.");
+
+                }
+                catch (Exception exep){
+                    JOptionPane.showMessageDialog(null,"Debe ejecutarse el ejercicio 2 para obtener las distribuciones y frecuencias de la imagen original. ");
+
+                }
+            }
+        });
+        graficosDeErrorYButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
             }
         });
     }

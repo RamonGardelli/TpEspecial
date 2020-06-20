@@ -16,6 +16,10 @@ import java.util.Vector;
 
 
 public class TrabajoEspecial {
+    //Imagenes
+    private BufferedImage Img_Canal2;
+    private BufferedImage Img_Canal8;
+    private BufferedImage Img_Canal10;
     private BufferedImage Img_Original;
     private BufferedImage Img_1;
     private BufferedImage Img_2;
@@ -24,6 +28,7 @@ public class TrabajoEspecial {
     private BufferedImage Img_5;
     private BufferedImage Img_Policia;
 
+    //Informacion de Ejercicios
     private BufferedImage imagenEjercicio1;
 
     private float[] distribucionImagenOriginal;
@@ -33,6 +38,30 @@ public class TrabajoEspecial {
     private int[] frecuenciasImagenOriginal;
     private int[] frecuenciasImagenPolicia;
     private int[] frecuenciasImagenEj1;
+
+    float[][] mat_Transicion_Ejercicio4;
+
+
+    public BufferedImage getImg_Canal2() {
+        ColorModel cm = Img_Canal2.getColorModel();
+        boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+        WritableRaster raster = Img_Canal2.copyData(null);
+        return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
+    }
+
+    public BufferedImage getImg_Canal8() {
+        ColorModel cm = Img_Canal8.getColorModel();
+        boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+        WritableRaster raster = Img_Canal8.copyData(null);
+        return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
+    }
+
+    public BufferedImage getImg_Canal10() {
+        ColorModel cm = Img_Canal10.getColorModel();
+        boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+        WritableRaster raster = Img_Canal10.copyData(null);
+        return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
+    }
 
     public BufferedImage getImg_Original() {
         ColorModel cm = Img_Original.getColorModel();
@@ -79,6 +108,10 @@ public class TrabajoEspecial {
         return Arrays.copyOf(frecuenciasImagenEj1, frecuenciasImagenEj1.length);
     }
 
+    public float[][] getMat_Transicion_Ejercicio4() {
+        return Arrays.copyOf(mat_Transicion_Ejercicio4, mat_Transicion_Ejercicio4.length);
+    }
+
     public TrabajoEspecial() {
         //CARGAR IMAGEN
         try {
@@ -89,6 +122,9 @@ public class TrabajoEspecial {
             this.Img_4 = ImageIO.read(new File("img\\Will_4.bmp"));
             this.Img_5 = ImageIO.read(new File("img\\Will_5.bmp"));
             this.Img_Policia = ImageIO.read(new File("img\\Will_ej2.bmp"));
+            this.Img_Canal2 = ImageIO.read(new File("img\\Will_Canal2.bmp"));
+            this.Img_Canal8 = ImageIO.read(new File("img\\Will_Canal8.bmp"));
+            this.Img_Canal10 = ImageIO.read(new File("img\\Will_Canal10.bmp"));
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
@@ -478,4 +514,182 @@ public class TrabajoEspecial {
 
 
     }
+
+
+    public void CalcularMatrizTransicion(BufferedImage Img_Canal, String nombreArchivo) {
+
+        Helper helper_Canales = new Helper();
+        int[] Simbolos_ImgOriginal = helper_Canales.arrayHelperPosicion(distribucionImagenOriginal);
+        int[][] mat_Transicion_Frecuencias = new int[distribucionImagenOriginal.length][Simbolos_ImgOriginal.length];
+
+        for (int i = 0; i < mat_Transicion_Frecuencias.length; i++) {
+            for (int j = 0; j < mat_Transicion_Frecuencias[0].length; j++) {
+                mat_Transicion_Frecuencias[i][j] = 0;
+            }
+        }
+
+        for (int x = 0; x < Img_Canal.getWidth(); x++) {
+            for (int y = 0; y < Img_Canal.getHeight(); y++) {
+                int rgb_Img_Canal = Img_Canal.getRGB(x, y);
+                int rgb_Img_Original = Img_Original.getRGB(x, y);
+                Color color_Canal = new Color(rgb_Img_Canal, true);
+                Color color_Policia = new Color(rgb_Img_Original, true);
+                rgb_Img_Canal = color_Canal.getRed();
+                rgb_Img_Original = color_Policia.getRed();
+                int rgb_posicion_Original = helper_Canales.get_posicion_del_simbolo(Simbolos_ImgOriginal, rgb_Img_Original);
+                mat_Transicion_Frecuencias[rgb_Img_Canal][rgb_posicion_Original]++;
+            }
+        }
+
+
+        int[][] mat_SinCeros = helper_Canales.matHelperFrecuencia(mat_Transicion_Frecuencias);
+        int[] frecuencias_SinCeros = helper_Canales.arrayHelperFrecuencia(frecuenciasImagenOriginal);
+
+        float[][] mat_Transicion = new float[mat_SinCeros.length][mat_SinCeros[0].length];
+
+        for (int i = 0; i < mat_Transicion[0].length; i++) {
+            for (int j = 0; j < mat_Transicion.length; j++) {
+                mat_Transicion[j][i] = (float) mat_SinCeros[j][i] / frecuencias_SinCeros[i];
+            }
+        }
+
+
+        ///ESTO VA EN UN METODO NUEVO
+        float[] probabilidades_SinCeros = helper_Canales.arrayHelperProbabilidad(distribucionImagenOriginal);
+
+        float entropia = 0;
+        for (int col = 0; col < 16; col++) {
+            float entrCol = 0;
+            for (int fila = 0; fila < 16; fila++) {
+                float valor = mat_Transicion[fila][col];
+                if (valor > 0)
+                    entrCol -= valor * (float) (Math.log(valor) / Math.log(2));
+            }
+            entropia += entrCol * probabilidades_SinCeros[col];
+        }
+        System.out.println("ruido:" + entropia);
+///*//////////////////////////////
+        this.mat_Transicion_Ejercicio4 = mat_Transicion;
+
+        String mat_Transicion_Retornada = "";
+
+        for (int i = 0; i < mat_Transicion[0].length; i++) {
+            for (int j = 0; j < mat_Transicion.length; j++) {
+                mat_Transicion_Retornada += (String.format("%.3f", mat_Transicion[i][j]) + "  ");
+            }
+            mat_Transicion_Retornada += "\n";
+        }
+
+
+        try {
+            File outFile = new File(System.getProperty("user.dir") + "/resultados/" + nombreArchivo + ".txt");
+            if (outFile.exists()) {
+                outFile.delete();
+                outFile.createNewFile();
+            }
+            FileOutputStream out = new FileOutputStream(outFile);
+            DataOutputStream writer = new DataOutputStream(out);
+
+            writer.writeBytes(mat_Transicion_Retornada);
+            writer.close();
+
+        } catch (Exception e) {
+
+        }
+
+    }
+
+    public int Simular_Entrada(float[] probabilidades) {
+
+        float p = (float) Math.random();
+        for (int i = 0; i < probabilidades.length; i++) {
+            if (p < probabilidades[i]) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public int Simular_Salida(float[][] mat_Acumulada, int entrada) {
+
+        float p = (float) Math.random();
+        for (int i = 0; i < mat_Acumulada.length; i++) {
+            if (p < mat_Acumulada[i][entrada])
+                return i;
+        }
+        return -1;
+    }
+
+    public float CalcularRuido_Muestreo(float[][] mat_Transicion, String nombreArchivo, float Epsilon, int MIN_MUESTRAS) {
+
+        Helper helper_Ruido = new Helper();
+        int Muestras = 0;
+        float ruido_Act = 0;
+        float ruido_Ant = -1;
+        int[] Simbolos_Original = helper_Ruido.arrayHelperPosicion(distribucionImagenOriginal);
+        float[] Distribucion_Original = helper_Ruido.arrayHelperProbabilidad(distribucionImagenOriginal);
+
+        float[] probabilidades_Acumuladas = helper_Ruido.calcular_ProbabilidadesAcumuladas(distribucionImagenOriginal);
+        float[][] mat_Transicion_Acumulada_Canal = helper_Ruido.calcular_MatrizAcumulada(mat_Transicion);
+        int entrada = 0;
+        int salida = 0;
+
+        int[] frecuencias_Muestreo = new int[probabilidades_Acumuladas.length];
+        float[] probabilidades_Muestreo = new float[probabilidades_Acumuladas.length];
+        for (int i = 0; i < frecuencias_Muestreo.length; i++) {
+            frecuencias_Muestreo[i] = 0;
+            probabilidades_Muestreo[i]=0;
+        }
+        int[][] mat_Transicion_Frecuencias_Muestreo = new int[mat_Transicion_Acumulada_Canal.length][mat_Transicion_Acumulada_Canal[0].length];
+
+        float[][] mat_Transicion_Probabilidades_Muestreo = new float[mat_Transicion_Acumulada_Canal.length][mat_Transicion_Acumulada_Canal[0].length];
+
+        for (int i = 0; i < mat_Transicion_Frecuencias_Muestreo.length ; i++) {
+            for (int j = 0; j < mat_Transicion_Frecuencias_Muestreo[0].length; j++) {
+                mat_Transicion_Probabilidades_Muestreo[i][j]=0f;
+                mat_Transicion_Frecuencias_Muestreo[i][j]=0;
+            }
+        }
+
+        while (!this.Converge(ruido_Act, ruido_Ant, Epsilon) || Muestras < MIN_MUESTRAS) {
+            entrada = Simular_Entrada(probabilidades_Acumuladas);
+            salida = Simular_Salida(mat_Transicion_Acumulada_Canal, entrada);
+            Muestras++;
+
+            frecuencias_Muestreo[entrada]++;
+
+            for (int i = 0; i < probabilidades_Muestreo.length; i++) {
+                probabilidades_Muestreo[i] = (float) frecuencias_Muestreo[i]/Muestras;
+            }
+
+            mat_Transicion_Frecuencias_Muestreo[salida][entrada]++;
+
+            for (int i = 0; i < mat_Transicion_Probabilidades_Muestreo.length; i++) {
+                mat_Transicion_Probabilidades_Muestreo[i][entrada] = (float) mat_Transicion_Frecuencias_Muestreo[i][entrada]/frecuencias_Muestreo[entrada];
+            }
+
+            ruido_Ant = ruido_Act;
+            for (int i = 0; i < mat_Transicion_Probabilidades_Muestreo[0].length ; i++) {
+                float entropia_Condicional = 0f;
+                for (int j = 0; j <mat_Transicion_Probabilidades_Muestreo.length ; j++) {
+                    if(mat_Transicion_Probabilidades_Muestreo[j][i] != 0)
+                        entropia_Condicional -=  mat_Transicion_Probabilidades_Muestreo[j][i] * (float) (Math.log(mat_Transicion_Probabilidades_Muestreo[j][i])/Math.log(2));
+                }
+                ruido_Act += probabilidades_Muestreo[i] * entropia_Condicional;
+            }
+
+        }
+        return ruido_Act;
+    }
+
+    private boolean Converge(float a, float b, float Epsilon) {
+        return (Math.abs(a - b) < Epsilon);
+    }
+
+
 }
+
+
+
+
+

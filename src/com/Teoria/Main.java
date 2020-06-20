@@ -1,13 +1,25 @@
 package com.Teoria;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+
 public class Main {
 
     public static void main(String[] args) {
 
         //MIGRADO A INTERFAZ.. APP
-        /*
+
         //Defino unica instancia.
         TrabajoEspecial tpe = new TrabajoEspecial();
+        tpe.Ejercicio1();
+        tpe.Ejercicio2();
+
+        BufferedImage Img_Canal2 = tpe.getImg_Canal2();
+
+        /*
+        tpe.CalcularMatrizTransicion(Img_Canal2,"Matriz Transicion Canal2");
+
 
         //Es necesario correr el ejercicio 1 para saber cual es la img mas parecida y ya tener toda la info
         tpe.Ejercicio1();
