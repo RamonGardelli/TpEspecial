@@ -1,14 +1,17 @@
 package com.Teoria;
 
 
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
+import org.jfree.chart.*;
+import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
+import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.category.LineAndShapeRenderer;
 import org.jfree.chart.renderer.xy.StandardXYBarPainter;
 import org.jfree.chart.renderer.xy.XYBarRenderer;
+import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
@@ -17,6 +20,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.text.DecimalFormat;
+import java.util.Vector;
 
 class Histograma {
 
@@ -28,6 +33,48 @@ class Histograma {
         this.vectorhistograma = vector;
         this.titulo = titulo;
     }
+    public Histograma(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public  void Ver_GraficoError(Vector<Float> errores) throws Exception {
+        DefaultCategoryDataset line_chart_dataset = new DefaultCategoryDataset();
+
+        for (int i = 0; i < errores.size(); i++) {
+            line_chart_dataset.addValue(errores.elementAt(i),"Error",""+i);
+        }
+
+        JFreeChart grafico = ChartFactory.createLineChart(
+                this.titulo,"Error",
+                "Valor",
+                line_chart_dataset,PlotOrientation.VERTICAL,
+                true,true,false);
+        CategoryPlot plot = grafico.getCategoryPlot();
+        LineAndShapeRenderer renderer = (LineAndShapeRenderer) plot.getRenderer();
+
+        ChartFrame frame = new ChartFrame("Analisis de la convergencia ", grafico);
+        frame.pack();
+        frame.setSize(1300,700);
+        frame.setVisible(true);
+        CategoryAxis range = plot.getDomainAxis();
+        range.setVisible(false);
+
+        try {
+            BufferedImage outHistograma = grafico.createBufferedImage(800, 800);
+            String subtitulo = this.titulo.substring(16,this.titulo.length());
+            File outFile = new File(System.getProperty("user.dir") + "/resultados/" + "Grafico de convergencia "+ subtitulo + ".png");
+            if (outFile.exists()) {
+                outFile.delete();
+                outFile.createNewFile();
+            }
+            ImageIO.write(outHistograma, "png", outFile);
+        } catch (Exception e) {
+        }
+
+
+    }
+
+
 
     public void Ver_Histograma() {
         this.Crear_Histograma();

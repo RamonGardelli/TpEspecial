@@ -155,13 +155,14 @@ public class App {
                 try {
                     String Epsilon = JOptionPane.showInputDialog("Ingrese Epsilon");
                     String MIN_MUESTRAS = JOptionPane.showInputDialog("Ingrese minimo de muestras");
-                    tpe.CalcularRuido_Muestreo(mat_Transicion_Canal2, "Error del Ruido Canal 2" + " Epsilon=" + Epsilon + "MinMuestras="+ MIN_MUESTRAS, ruido_Canal2, Float.parseFloat(Epsilon), Integer.parseInt(MIN_MUESTRAS));
-                    tpe.CalcularRuido_Muestreo(mat_Transicion_Canal8, "Error del Ruido Canal 8"+ " Epsilon=" + Epsilon + "MinMuestras="+ MIN_MUESTRAS, ruido_Canal8, Float.parseFloat(Epsilon), Integer.parseInt(MIN_MUESTRAS));
-                    tpe.CalcularRuido_Muestreo(mat_Transicion_Canal10, "Error del Ruido Canal 10"+ " Epsilon=" + Epsilon + "MinMuestras="+MIN_MUESTRAS, ruido_Canal10, Float.parseFloat(Epsilon), Integer.parseInt(MIN_MUESTRAS));
+                    tpe.CalcularRuido_Muestreo(mat_Transicion_Canal2, "Error del Ruido Canal 2" + " Epsilon= " + Epsilon + " MinMuestras= "+ MIN_MUESTRAS, ruido_Canal2, Float.parseFloat(Epsilon), Integer.parseInt(MIN_MUESTRAS));
+                    tpe.CalcularRuido_Muestreo(mat_Transicion_Canal8, "Error del Ruido Canal 8"+ " Epsilon= " + Epsilon + " MinMuestras= "+ MIN_MUESTRAS, ruido_Canal8, Float.parseFloat(Epsilon), Integer.parseInt(MIN_MUESTRAS));
+                    tpe.CalcularRuido_Muestreo(mat_Transicion_Canal10, "Error del Ruido Canal 10"+ " Epsilon= " + Epsilon + " MinMuestras= "+MIN_MUESTRAS, ruido_Canal10, Float.parseFloat(Epsilon), Integer.parseInt(MIN_MUESTRAS));
                     JOptionPane.showMessageDialog(null,"Los resultados pueden ser visualizados en la carpeta Resultados.");
 
                 }
                 catch (Exception error){
+                    System.out.println(error);
                     JOptionPane.showMessageDialog(null,"Debe ejecutarse el ejercicio 3 asi obtener el ruido analitico y poder comparar. ");
 
                 }

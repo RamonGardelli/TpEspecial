@@ -634,7 +634,7 @@ public class TrabajoEspecial {
         return -1;
     }
 
-    public void CalcularRuido_Muestreo(float[][] mat_Transicion, String nombreArchivo,float ruido_Analitico, float Epsilon, int MIN_MUESTRAS) {
+    public void CalcularRuido_Muestreo(float[][] mat_Transicion, String nombreArchivo,float ruido_Analitico, float Epsilon, int MIN_MUESTRAS) throws Exception {
 
         Helper helper_Ruido = new Helper();
         int Muestras = 0;
@@ -664,6 +664,8 @@ public class TrabajoEspecial {
                 mat_Transicion_Frecuencias_Muestreo[i][j]=0;
             }
         }
+        Vector<Float> errores = new Vector<>();
+
 
         while (!this.Converge(ruido_Act, ruido_Ant, Epsilon) || Muestras < MIN_MUESTRAS) {
             entrada = Simular_Entrada(probabilidades_Acumuladas);
@@ -694,8 +696,13 @@ public class TrabajoEspecial {
 
                 ruido_Act += probabilidades_Muestreo[i] * entropia_Condicional;
             }
+            errores.add(ruido_Analitico-ruido_Act);
 
         }
+
+
+        Histograma hist_Ruido = new Histograma(nombreArchivo);
+        hist_Ruido.Ver_GraficoError(errores);
 
         try {
             File outFile = new File(System.getProperty("user.dir") + "/resultados/" + nombreArchivo + ".txt");
@@ -703,6 +710,7 @@ public class TrabajoEspecial {
                 outFile.delete();
                 outFile.createNewFile();
             }
+
             FileWriter writer = new FileWriter(outFile);
 
             writer.write("Ruido del canal calculado analiticamente: " + ruido_Analitico +"\n");
