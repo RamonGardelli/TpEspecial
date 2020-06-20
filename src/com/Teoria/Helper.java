@@ -112,7 +112,7 @@ public class Helper {
             float suma = 0;
             for (int j = 0; j <mat_Retornada.length ; j++) {
                 mat_Retornada[j][i] = (suma + mat_Transicion[j][i]);
-                suma = mat_Transicion[j][i];
+                suma += mat_Transicion[j][i];
             }
         }
         return mat_Retornada;
@@ -123,7 +123,7 @@ public class Helper {
         float suma=0;
         for (int i = 0; i < array_Retornado.length; i++) {
             array_Retornado[i] = (suma + distribucion[i]);
-            suma = distribucion[i];
+            suma += distribucion[i];
         }
         return array_Retornado;
     }

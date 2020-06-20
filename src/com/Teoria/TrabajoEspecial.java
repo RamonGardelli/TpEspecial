@@ -109,7 +109,11 @@ public class TrabajoEspecial {
     }
 
     public float[][] getMat_Transicion_Ejercicio4() {
-        return Arrays.copyOf(mat_Transicion_Ejercicio4, mat_Transicion_Ejercicio4.length);
+        float[][] resultado = new float[mat_Transicion_Ejercicio4.length][];
+        for (int i = 0; i < mat_Transicion_Ejercicio4.length; i++) {
+            resultado[i] = Arrays.copyOf(mat_Transicion_Ejercicio4[i], mat_Transicion_Ejercicio4[i].length);
+        }
+        return resultado;
     }
 
     public TrabajoEspecial() {
@@ -225,6 +229,7 @@ public class TrabajoEspecial {
             writer.write("Factor de correlacion entre imagen original e imagen 4" + ": " + r.elementAt(3).getFactor() + "\n");
             writer.write("Factor de correlacion entre imagen original e imagen 5" + ": " + r.elementAt(4).getFactor() + "\n");
             writer.close();
+
 
         } catch (Exception e) {
         }
@@ -567,7 +572,7 @@ public class TrabajoEspecial {
             }
             entropia += entrCol * probabilidades_SinCeros[col];
         }
-        System.out.println("ruido:" + entropia);
+        System.out.println("ruido analitico :" + entropia);
 ///*//////////////////////////////
         this.mat_Transicion_Ejercicio4 = mat_Transicion;
 
@@ -629,7 +634,7 @@ public class TrabajoEspecial {
         int[] Simbolos_Original = helper_Ruido.arrayHelperPosicion(distribucionImagenOriginal);
         float[] Distribucion_Original = helper_Ruido.arrayHelperProbabilidad(distribucionImagenOriginal);
 
-        float[] probabilidades_Acumuladas = helper_Ruido.calcular_ProbabilidadesAcumuladas(distribucionImagenOriginal);
+        float[] probabilidades_Acumuladas = helper_Ruido.calcular_ProbabilidadesAcumuladas(Distribucion_Original);
         float[][] mat_Transicion_Acumulada_Canal = helper_Ruido.calcular_MatrizAcumulada(mat_Transicion);
         int entrada = 0;
         int salida = 0;
@@ -668,17 +673,21 @@ public class TrabajoEspecial {
                 mat_Transicion_Probabilidades_Muestreo[i][entrada] = (float) mat_Transicion_Frecuencias_Muestreo[i][entrada]/frecuencias_Muestreo[entrada];
             }
 
+
             ruido_Ant = ruido_Act;
+            ruido_Act =0;
             for (int i = 0; i < mat_Transicion_Probabilidades_Muestreo[0].length ; i++) {
                 float entropia_Condicional = 0f;
                 for (int j = 0; j <mat_Transicion_Probabilidades_Muestreo.length ; j++) {
                     if(mat_Transicion_Probabilidades_Muestreo[j][i] != 0)
                         entropia_Condicional -=  mat_Transicion_Probabilidades_Muestreo[j][i] * (float) (Math.log(mat_Transicion_Probabilidades_Muestreo[j][i])/Math.log(2));
                 }
+
                 ruido_Act += probabilidades_Muestreo[i] * entropia_Condicional;
             }
 
         }
+        System.out.println("ruido muestreo: " +ruido_Act);
         return ruido_Act;
     }
 

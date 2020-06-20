@@ -143,6 +143,9 @@ public class App {
         graficosDeErrorYButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                tpe.CalcularRuido_Muestreo(mat_Transicion_Canal2,"hola",0.0001f,50000);
+                tpe.CalcularRuido_Muestreo(mat_Transicion_Canal8,"hola",0.0001f,50000);
+                tpe.CalcularRuido_Muestreo(mat_Transicion_Canal10,"hola",0.0001f,50000);
 
             }
         });
