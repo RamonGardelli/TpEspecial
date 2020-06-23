@@ -41,7 +41,7 @@ class Histograma {
         DefaultCategoryDataset line_chart_dataset = new DefaultCategoryDataset();
 
         for (int i = 0; i < errores.size(); i++) {
-            line_chart_dataset.addValue(errores.elementAt(i),"Error",""+i);
+            line_chart_dataset.addValue(errores.elementAt(i),"Error",""+(Math.log(i)/Math.log(2)));
         }
 
         JFreeChart grafico = ChartFactory.createLineChart(
@@ -55,6 +55,7 @@ class Histograma {
         ChartFrame frame = new ChartFrame("Analisis de la convergencia ", grafico);
         frame.pack();
         frame.setSize(1300,700);
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
         CategoryAxis range = plot.getDomainAxis();
         range.setVisible(false);
@@ -62,7 +63,7 @@ class Histograma {
         try {
             File directorio = new File( System.getProperty("user.dir")+"/resultados/Ejercicio4/");
             if(!directorio.exists()) {
-                directorio.mkdir();
+                directorio.mkdirs();
             }
             BufferedImage outHistograma = grafico.createBufferedImage(800, 800);
             String subtitulo = this.titulo.substring(16,this.titulo.length());
@@ -110,6 +111,7 @@ class Histograma {
         main.setLayout(new BorderLayout(4, 4));
         main.setVisible(true);
         main.setSize(1300, 700);
+        main.setLocationRelativeTo(null);
 
         JPanel panel = new JPanel();
 
@@ -126,7 +128,7 @@ class Histograma {
         try {
             File directorio = new File( System.getProperty("user.dir")+"/resultados/Ejercicio2/");
             if(!directorio.exists()) {
-                directorio.mkdir();
+                directorio.mkdirs();
             }
             BufferedImage outHistograma = chart.createBufferedImage(800, 800);
             File outFile = new File(System.getProperty("user.dir") + "/resultados/Ejercicio2/" + this.titulo + ".png");

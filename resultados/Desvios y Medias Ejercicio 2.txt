@@ -1,3 +1,0 @@
-Imagen Original - Media: 189.94499  Desvio Estandar: 55.701775
-Imagen mas parecida  - Media : 192.4245  Desvio Estandar: 55.155605
-Imagen del Policia - Media: 195.15138  Desvio Estandar: 73.833984

@@ -1,5 +1,0 @@
-Factor de correlacion entre imagen original e imagen 1: 0.9788775
-Factor de correlacion entre imagen original e imagen 2: 0.97795665
-Factor de correlacion entre imagen original e imagen 3: 0.92255765
-Factor de correlacion entre imagen original e imagen 4: 0.9133078
-Factor de correlacion entre imagen original e imagen 5: 0.82070607

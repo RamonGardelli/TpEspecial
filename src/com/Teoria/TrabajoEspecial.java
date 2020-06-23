@@ -190,6 +190,9 @@ public class TrabajoEspecial {
                 De_Img5.Calcular_Desvio_Estandar(rgb_Img5);
 
 
+
+
+
                 // COVARIANZA ACUMULADA
                 ImgOrig_Cov_Img1.Calcular_Covarianza(rgb_ImgOriginal, rgb_Img1);
                 ImgOrig_Cov_Img2.Calcular_Covarianza(rgb_ImgOriginal, rgb_Img2);
@@ -224,7 +227,7 @@ public class TrabajoEspecial {
         try {
             File directorio = new File( System.getProperty("user.dir")+"/resultados/Ejercicio1/");
             if(!directorio.exists()) {
-                directorio.mkdir();
+                directorio.mkdirs();
             }
             File outFile = new File(System.getProperty("user.dir") + "/resultados/Ejercicio1/" + "Factores de correlacion Ejercicio 1" + ".txt");
             if (outFile.exists()) {
@@ -339,7 +342,7 @@ public class TrabajoEspecial {
         try {
             File directorio = new File( System.getProperty("user.dir")+"/resultados/Ejercicio2/");
             if(!directorio.exists()) {
-                directorio.mkdir();
+                directorio.mkdirs();
             }
             File outFile = new File(System.getProperty("user.dir") + "/resultados/Ejercicio2/" + "Desvios y Medias Ejercicio 2" + ".txt");
             if (outFile.exists()) {
@@ -400,7 +403,7 @@ public class TrabajoEspecial {
         try {
             File directorio = new File( System.getProperty("user.dir")+"/resultados/Ejercicio3/");
             if(!directorio.exists()) {
-                directorio.mkdir();
+                directorio.mkdirs();
             }
             File outFile = new File(System.getProperty("user.dir") + "/resultados/Ejercicio3/" + nombreArchivo + ".bin");
             if (outFile.exists()) {
@@ -446,6 +449,8 @@ public class TrabajoEspecial {
             writer.write(Encabezado_en_Bytes);//escribe encabezado
             writer.write(Mensaje_en_Bytes);
             writer.close();
+
+            outFile.length();
 
         } catch (Exception e) {
         }
@@ -533,7 +538,7 @@ public class TrabajoEspecial {
             try {
                 File directorio = new File( System.getProperty("user.dir")+"/resultados/Ejercicio3/");
                 if(!directorio.exists()) {
-                    directorio.mkdir();
+                    directorio.mkdirs();
                 }
                 File outFile = new File(System.getProperty("user.dir") + "/resultados/Ejercicio3/" + nombreArchivo + ".bmp");
                 boolean dirCreated = outFile.mkdir();
@@ -611,7 +616,7 @@ public class TrabajoEspecial {
         try {
             File directorio = new File( System.getProperty("user.dir")+"/resultados/Ejercicio4/");
             if(!directorio.exists()) {
-                directorio.mkdir();
+                directorio.mkdirs();
             }
             File outFile = new File(System.getProperty("user.dir") + "/resultados/Ejercicio4/" + nombreArchivo + ".txt");
             if (outFile.exists()) {
@@ -729,7 +734,7 @@ public class TrabajoEspecial {
 
                 ruido_Act += probabilidades_Muestreo[i] * entropia_Condicional;
             }
-            errores.add(ruido_Analitico-ruido_Act);
+            errores.add(Math.abs(ruido_Act));
 
         }
 
@@ -740,7 +745,7 @@ public class TrabajoEspecial {
         try {
             File directorio = new File( System.getProperty("user.dir")+"/resultados/Ejercicio4/");
             if(!directorio.exists()) {
-                directorio.mkdir();
+                directorio.mkdirs();
             }
             File outFile = new File(System.getProperty("user.dir") + "/resultados/Ejercicio4/" + nombreArchivo + ".txt");
             if (outFile.exists()) {
