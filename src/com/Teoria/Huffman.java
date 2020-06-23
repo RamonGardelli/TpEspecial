@@ -18,6 +18,7 @@ public class Huffman {
         }
 
         public Nodo_Huff(float p_hoja, int c) {
+            this.p = p_hoja;
             this.c = c;
             this.izq = null;
             this.der = null;

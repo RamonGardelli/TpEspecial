@@ -162,7 +162,6 @@ public class App {
 
                 }
                 catch (Exception error){
-                    System.out.println(error);
                     JOptionPane.showMessageDialog(null,"Debe ejecutarse el ejercicio 3 asi obtener el ruido analitico y poder comparar. ");
 
                 }
