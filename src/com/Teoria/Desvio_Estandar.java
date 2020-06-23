@@ -26,5 +26,4 @@ public class Desvio_Estandar{
         float varianza = mediaaux.get_Media() - (float) Math.pow(this.media.get_Media(),2);
         this.de = (float) Math.sqrt(varianza);
     }
-    float get_MediaPrueba(){return media.get_Media();}
 }

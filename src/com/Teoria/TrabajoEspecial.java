@@ -16,7 +16,6 @@ import java.util.Vector;
 
 
 public class TrabajoEspecial {
-    //Imagenes
     private BufferedImage Img_Canal2;
     private BufferedImage Img_Canal8;
     private BufferedImage Img_Canal10;
@@ -27,8 +26,6 @@ public class TrabajoEspecial {
     private BufferedImage Img_4;
     private BufferedImage Img_5;
     private BufferedImage Img_Policia;
-
-    //Informacion de Ejercicios
     private BufferedImage imagenEjercicio1;
 
     private float[] distribucionImagenOriginal;
@@ -122,7 +119,6 @@ public class TrabajoEspecial {
     }
 
     public TrabajoEspecial() {
-        //CARGAR IMAGEN
         try {
             this.Img_Original = ImageIO.read(new File("img\\Will(Original).bmp"));
             this.Img_1 = ImageIO.read(new File("img\\Will_1.bmp"));
@@ -156,7 +152,6 @@ public class TrabajoEspecial {
         Covarianza ImgOrig_Cov_Img5 = new Covarianza();
         Vector<Tupla> r = new Vector<>(5);
 
-        //LEER IMAGEN
         for (int x = 0; x < Img_Original.getWidth(); x++) {
             for (int y = 0; y < Img_Original.getHeight(); y++) {
                 int rgb_ImgOriginal = Img_Original.getRGB(x, y);
@@ -178,11 +173,9 @@ public class TrabajoEspecial {
                 rgb_Img4 = color4.getRed();
                 rgb_Img5 = color5.getRed();
 
-                //LO QUE SIGUE ES EL CALCULO DEL INCISO 1
-                //ACA CALCULAMOS DESVIO ORIGINAL
+
                 De_ImgOriginal.Calcular_Desvio_Estandar(rgb_ImgOriginal);
 
-                // ACA CALCULAMOS EL DESVIO DE LA IMAGEN i
                 De_Img1.Calcular_Desvio_Estandar(rgb_Img1);
                 De_Img2.Calcular_Desvio_Estandar(rgb_Img2);
                 De_Img3.Calcular_Desvio_Estandar(rgb_Img3);
@@ -190,10 +183,6 @@ public class TrabajoEspecial {
                 De_Img5.Calcular_Desvio_Estandar(rgb_Img5);
 
 
-
-
-
-                // COVARIANZA ACUMULADA
                 ImgOrig_Cov_Img1.Calcular_Covarianza(rgb_ImgOriginal, rgb_Img1);
                 ImgOrig_Cov_Img2.Calcular_Covarianza(rgb_ImgOriginal, rgb_Img2);
                 ImgOrig_Cov_Img3.Calcular_Covarianza(rgb_ImgOriginal, rgb_Img3);
@@ -202,7 +191,6 @@ public class TrabajoEspecial {
             }
 
         }
-        // r = CovAB / (desvio(A)*desvio(B))
 
 
         r.add(0, new Tupla(ImgOrig_Cov_Img1.get_Covarianza() / (De_ImgOriginal.get_Desvio_Estandar() * De_Img1.get_Desvio_Estandar()), "Img1"));
@@ -303,7 +291,6 @@ public class TrabajoEspecial {
 
             }
         }
-        // Distribucion Histograma
 
         for (int i = 0; i < probabilidad_ImgOriginal.length; i++) {
             probabilidad_ImgOriginal[i] = (float) exitos_ImgOriginal[i] / m;
@@ -312,7 +299,6 @@ public class TrabajoEspecial {
 
         }
 
-        //distribuciones y frecuencias de las imagenes/////////////////////////////////////
         distribucionImagenOriginal = probabilidad_ImgOriginal;
         distribucionImagenPolicia = probabilidad_ImgPolicia;
         distribucionImagenEj1 = probabilidad_ImgEj1;
@@ -320,7 +306,6 @@ public class TrabajoEspecial {
         frecuenciasImagenPolicia = exitos_ImgPolicia;
         frecuenciasImagenEj1 = exitos_ImgEj1;
 
-        //////////////////////////////
 
         String text_ImgOriginal = "Imagen Original - Media: " + media_ImgOriginal.get_Media() + "  Desvio Estandar: " + De_ImgOriginal.get_Desvio_Estandar();
 
@@ -437,7 +422,6 @@ public class TrabajoEspecial {
             Encabezado_Img.setB(b);
 
 
-            //crea streamer para object to byte[]
             ByteArrayOutputStream streamer = new ByteArrayOutputStream();
             ObjectOutputStream os = new ObjectOutputStream(streamer);
             os.writeObject(Encabezado_Img);
@@ -446,7 +430,7 @@ public class TrabajoEspecial {
 
 
             writer.writeInt(Encabezado_en_Bytes.length);
-            writer.write(Encabezado_en_Bytes);//escribe encabezado
+            writer.write(Encabezado_en_Bytes);
             writer.write(Mensaje_en_Bytes);
             writer.close();
 
@@ -468,7 +452,7 @@ public class TrabajoEspecial {
                 Encabezado_Decodificado[i] = Mensaje_Decodificado[i + 4];
             }
 
-            ByteArrayInputStream BufferBytes = new ByteArrayInputStream(Encabezado_Decodificado); // bytes es el byte[]
+            ByteArrayInputStream BufferBytes = new ByteArrayInputStream(Encabezado_Decodificado);
             ObjectInputStream InputStreamEncabezado = new ObjectInputStream(BufferBytes);
             Encabezado Encabezado_Img = (Encabezado) InputStreamEncabezado.readObject();
             InputStreamEncabezado.close();
@@ -488,7 +472,7 @@ public class TrabajoEspecial {
             Vector<Integer> Secuencia_Recuperada = new Vector<>();
 
             int bufferLength = 8;
-            byte Mascara = (byte) (1 << bufferLength - 1); // Mascara: 10000000
+            byte Mascara = (byte) (1 << bufferLength - 1);
             int bufferPos = 0;
 
             int i = Dim_Encabezado + 4;
@@ -496,7 +480,7 @@ public class TrabajoEspecial {
                 byte buffer = Mensaje_Decodificado[i];
                 while (bufferPos < bufferLength) {
 
-                    if ((buffer & Mascara) == Mascara) {  // 10000000 /si es 1
+                    if ((buffer & Mascara) == Mascara) {
                         int arbolder = Huff_Decodificado.mover_ArbolDerecha();
                         if (arbolder != -1) {
                             Secuencia_Recuperada.add(arbolder);

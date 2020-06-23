@@ -1,8 +1,5 @@
 package com.Teoria;
 
-import javafx.util.Pair;
-
-import java.util.HashMap;
 import java.util.Vector;
 
 public class Helper {

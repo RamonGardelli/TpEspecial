@@ -1,8 +1,5 @@
 package com.Teoria;
 
-import java.awt.*;
-import java.awt.image.ColorModel;
-import java.awt.image.IndexColorModel;
 import java.io.Serializable;
 
 public class Encabezado implements Serializable{
@@ -66,9 +63,6 @@ public class Encabezado implements Serializable{
 
     }
 
-    public int[] getFrecuencia() {
-        return frecuencia;
-    }
     public int getFrecuenciaInt(int pos){
         return this.frecuencia[pos];
     }
@@ -82,9 +76,6 @@ public class Encabezado implements Serializable{
 
     public int getDimSimbolos(){
         return this.simbolos.length;
-    }
-    public int[] getSimbolos() {
-        return simbolos;
     }
     public int getSimbolosInt(int pos){
         return this.simbolos[pos];
@@ -110,9 +101,6 @@ public class Encabezado implements Serializable{
         this.alto = alto;
     }
 
-    public int getLongsimbolos() {
-        return longsimbolos;
-    }
 
     public void setLongsimbolos(int longsimbolos) {
         this.longsimbolos = longsimbolos;
